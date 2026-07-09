@@ -217,6 +217,113 @@ export const TEAMS_BY_LEAGUE: Record<string, Team[]> = {
       "logoUrl": "https://a.espncdn.com/i/teamlogos/nba/500/wsh.png"
     }
   ],
+  "wnba": [
+    {
+      "id": "20",
+      "leagueId": "wnba",
+      "name": "Atlanta Dream",
+      "abbreviation": "ATL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/atl.png"
+    },
+    {
+      "id": "19",
+      "leagueId": "wnba",
+      "name": "Chicago Sky",
+      "abbreviation": "CHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/chi.png"
+    },
+    {
+      "id": "18",
+      "leagueId": "wnba",
+      "name": "Connecticut Sun",
+      "abbreviation": "CON",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/con.png"
+    },
+    {
+      "id": "3",
+      "leagueId": "wnba",
+      "name": "Dallas Wings",
+      "abbreviation": "DAL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/dal.png"
+    },
+    {
+      "id": "129689",
+      "leagueId": "wnba",
+      "name": "Golden State Valkyries",
+      "abbreviation": "GS",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/gs.png"
+    },
+    {
+      "id": "5",
+      "leagueId": "wnba",
+      "name": "Indiana Fever",
+      "abbreviation": "IND",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/ind.png"
+    },
+    {
+      "id": "17",
+      "leagueId": "wnba",
+      "name": "Las Vegas Aces",
+      "abbreviation": "LV",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/lv.png"
+    },
+    {
+      "id": "6",
+      "leagueId": "wnba",
+      "name": "Los Angeles Sparks",
+      "abbreviation": "LA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/la.png"
+    },
+    {
+      "id": "8",
+      "leagueId": "wnba",
+      "name": "Minnesota Lynx",
+      "abbreviation": "MIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/min.png"
+    },
+    {
+      "id": "9",
+      "leagueId": "wnba",
+      "name": "New York Liberty",
+      "abbreviation": "NY",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/ny.png"
+    },
+    {
+      "id": "11",
+      "leagueId": "wnba",
+      "name": "Phoenix Mercury",
+      "abbreviation": "PHX",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/phx.png"
+    },
+    {
+      "id": "132052",
+      "leagueId": "wnba",
+      "name": "Portland Fire",
+      "abbreviation": "POR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/por.png"
+    },
+    {
+      "id": "14",
+      "leagueId": "wnba",
+      "name": "Seattle Storm",
+      "abbreviation": "SEA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/sea.png"
+    },
+    {
+      "id": "131935",
+      "leagueId": "wnba",
+      "name": "Toronto Tempo",
+      "abbreviation": "TOR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/tor.png"
+    },
+    {
+      "id": "16",
+      "leagueId": "wnba",
+      "name": "Washington Mystics",
+      "abbreviation": "WSH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/wnba/500/wsh.png"
+    }
+  ],
   "nfl": [
     {
       "id": "22",

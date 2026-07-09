@@ -13,6 +13,7 @@ const BASE = "https://site.api.espn.com/apis/site/v2/sports";
 // Keep in sync with src/leagues/registry.ts
 const LEAGUES = [
   { id: "nba", sport: "basketball", league: "nba" },
+  { id: "wnba", sport: "basketball", league: "wnba" },
   { id: "nfl", sport: "football", league: "nfl" },
 ];
 

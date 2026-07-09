@@ -2,8 +2,15 @@ import { describe, expect, it } from "vitest";
 import { LEAGUES, getLeagueModule, listLeagues } from "./registry";
 
 describe("registry", () => {
-  it("registers nba and nfl", () => {
-    expect(Object.keys(LEAGUES).sort()).toEqual(["nba", "nfl"]);
+  it("registers nba, wnba, and nfl", () => {
+    expect(Object.keys(LEAGUES).sort()).toEqual(["nba", "nfl", "wnba"]);
+  });
+
+  it("wnba shares the ESPN basketball adapter + base derivations (config-only add)", () => {
+    const wnba = getLeagueModule("wnba");
+    expect(wnba.config.sport).toBe("basketball");
+    expect(wnba.config.league).toBe("wnba");
+    expect(typeof wnba.adapter.fetchSchedule).toBe("function");
   });
 
   it("getLeagueModule returns the module with a working config", () => {
@@ -19,6 +26,6 @@ describe("registry", () => {
   });
 
   it("listLeagues returns configs for the picker", () => {
-    expect(listLeagues().map((c) => c.id).sort()).toEqual(["nba", "nfl"]);
+    expect(listLeagues().map((c) => c.id).sort()).toEqual(["nba", "nfl", "wnba"]);
   });
 });

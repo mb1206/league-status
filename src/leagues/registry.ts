@@ -19,6 +19,14 @@ const nbaModule = espnModule({
   icon: "🏀",
 });
 
+const wnbaModule = espnModule({
+  id: "wnba",
+  sport: "basketball",
+  league: "wnba",
+  displayName: "WNBA",
+  icon: "🏀",
+});
+
 const nflModule = espnModule({
   id: "nfl",
   sport: "football",
@@ -29,6 +37,7 @@ const nflModule = espnModule({
 
 export const LEAGUES: Record<string, LeagueModule> = {
   nba: nbaModule,
+  wnba: wnbaModule,
   nfl: nflModule,
 };
 
