@@ -1,13 +1,13 @@
-import type { LeagueConfig, Team } from "../../domain/types";
+import type { LeagueConfig } from "../../domain/types";
 import type { LeagueAdapter } from "../types";
 import {
   espnUrls,
   fetchJson,
   type EspnScheduleResponse,
   type EspnTeamResponse,
-  type EspnTeamsResponse,
 } from "./client";
 import { mapGame, mapStanding, mapTeam } from "./mappers";
+import { TEAMS_BY_LEAGUE } from "../teamsData";
 
 export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
   return {
@@ -25,17 +25,11 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
       return (res.events ?? []).map((e) => mapGame(e, teamId));
     },
 
+    // ESPN's /teams list endpoint is not CORS-enabled, so we search bundled
+    // reference data (regenerate with scripts/generate-teams.mjs) instead of
+    // fetching. Rosters are small and stable, so this stays fresh enough.
     async searchTeams(query) {
-      const res = await fetchJson<EspnTeamsResponse>(espnUrls.teams(config));
-      const all: Team[] = (res.sports?.[0]?.leagues?.[0]?.teams ?? []).map(
-        (t) => ({
-          id: t.team.id,
-          leagueId: config.id,
-          name: t.team.displayName,
-          abbreviation: t.team.abbreviation,
-          logoUrl: t.team.logos?.[0]?.href,
-        }),
-      );
+      const all = TEAMS_BY_LEAGUE[config.id] ?? [];
       const q = query.trim().toLowerCase();
       if (!q) return all;
       return all.filter(

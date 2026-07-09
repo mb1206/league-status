@@ -76,38 +76,23 @@ describe("createEspnAdapter", () => {
     expect(games[0]).toMatchObject({ isHome: true, result: "W" });
   });
 
-  it("searchTeams filters the teams list case-insensitively", async () => {
-    mockFetchOnce({
-      sports: [
-        {
-          leagues: [
-            {
-              teams: [
-                {
-                  team: {
-                    id: "13",
-                    displayName: "Los Angeles Lakers",
-                    abbreviation: "LAL",
-                    logos: [{ href: "https://logo/lal.png" }],
-                  },
-                },
-                {
-                  team: {
-                    id: "2",
-                    displayName: "Boston Celtics",
-                    abbreviation: "BOS",
-                    logos: [{ href: "https://logo/bos.png" }],
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    });
+  // ESPN's /teams list endpoint is not CORS-enabled, so search filters bundled
+  // reference data (src/leagues/teamsData.ts) client-side — no network fetch.
+  it("searchTeams filters bundled team data without any network fetch", async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
     const adapter = createEspnAdapter(config);
+
     const results = await adapter.searchTeams("laker");
     expect(results).toHaveLength(1);
     expect(results[0].abbreviation).toBe("LAL");
+    expect(results[0].leagueId).toBe("nba");
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("searchTeams returns all teams for an empty query", async () => {
+    const adapter = createEspnAdapter(config);
+    const results = await adapter.searchTeams("");
+    expect(results).toHaveLength(30); // all NBA teams
   });
 });
