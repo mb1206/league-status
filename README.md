@@ -1,32 +1,29 @@
-# React + TypeScript + Vite
+# League Status
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A small web dashboard showing the season status of the sports teams you follow:
+a status banner (standing + phase), plus upcoming and past games. Starts with the
+NBA; extensible to more leagues (NFL seeded).
 
-Currently, two official plugins are available:
+## Develop
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+    npm install
+    npm run dev
 
-## React Compiler
+## Test
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    npm run test:run
 
-## Expanding the Oxlint configuration
+## Deploy (GitHub Pages)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+The Vite `base` is set to `/league-status/`. Push this repo to a GitHub repo named
+`league-status`, then:
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+    npm run deploy
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Data comes from ESPN's public (unofficial) site API, fetched directly from the
+browser. No API key required.
+
+## Architecture
+
+See `docs/superpowers/specs/2026-07-08-league-status-design.md` and
+`docs/superpowers/plans/2026-07-08-league-status.md`.
