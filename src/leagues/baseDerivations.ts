@@ -1,6 +1,6 @@
 import type { Game, SeasonStatus, Standing } from "../domain/types";
 import type { LeagueDerivations, RawStanding, SeasonInput } from "./types";
-import { parseStandingSummary } from "./espn/mappers";
+import { parseStandingSummary } from "./standingText";
 
 export const PLAYOFF_COUNTDOWN_WEEKS = 10;
 const WEEK_MS = 7 * 86400000;
