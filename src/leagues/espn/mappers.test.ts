@@ -42,8 +42,8 @@ const teamResponse: EspnTeamResponse = {
     abbreviation: "LAL",
     logos: [{ href: "https://logo/lal.png" }],
     record: { items: [{ summary: "53-29" }] },
+    standingSummary: "1st in Pacific Division",
   },
-  standingSummary: "1st in Pacific Division",
 };
 
 describe("mapTeam", () => {
@@ -64,6 +64,34 @@ describe("mapStanding", () => {
       recordSummary: "53-29",
       standingSummaryText: "1st in Pacific Division",
     });
+  });
+
+  it("falls back to top-level standingSummary when team-level is absent", () => {
+    const res: EspnTeamResponse = {
+      team: {
+        id: "13",
+        displayName: "Los Angeles Lakers",
+        abbreviation: "LAL",
+        record: { items: [{ summary: "53-29" }] },
+      },
+      standingSummary: "1st in Pacific Division",
+    };
+    expect(mapStanding(res)).toEqual({
+      recordSummary: "53-29",
+      standingSummaryText: "1st in Pacific Division",
+    });
+  });
+
+  it("returns undefined standingSummaryText when neither field is present", () => {
+    const res: EspnTeamResponse = {
+      team: {
+        id: "13",
+        displayName: "Los Angeles Lakers",
+        abbreviation: "LAL",
+        record: { items: [{ summary: "53-29" }] },
+      },
+    };
+    expect(mapStanding(res).standingSummaryText).toBeUndefined();
   });
 });
 

@@ -30,6 +30,7 @@ export interface EspnTeamResponse {
     abbreviation: string;
     logos?: { href: string }[];
     record?: { items?: { summary: string }[] };
+    standingSummary?: string;
   };
   standingSummary?: string;
 }

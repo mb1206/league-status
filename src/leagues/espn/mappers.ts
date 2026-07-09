@@ -49,7 +49,7 @@ export function mapTeam(res: EspnTeamResponse, leagueId: string): Team {
 export function mapStanding(res: EspnTeamResponse): RawStanding {
   return {
     recordSummary: res.team.record?.items?.[0]?.summary ?? "",
-    standingSummaryText: res.standingSummary,
+    standingSummaryText: res.team.standingSummary ?? res.standingSummary,
   };
 }
 
