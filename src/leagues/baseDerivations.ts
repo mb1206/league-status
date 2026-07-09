@@ -3,6 +3,10 @@ import type { LeagueDerivations, RawStanding, SeasonInput } from "./types";
 import { parseStandingSummary } from "./standingText";
 
 export const PLAYOFF_COUNTDOWN_WEEKS = 10;
+// If the next game is more than this many weeks away, treat the team as off
+// season — the schedule may already list next season's games. This threshold
+// sits above any in-season break (All-Star, Olympic) and below any offseason.
+export const OFFSEASON_GAP_WEEKS = 6;
 const WEEK_MS = 7 * 86400000;
 const MAX_GAMES = 3;
 
@@ -43,6 +47,12 @@ export function createBaseDerivations(): LeagueDerivations {
         .sort(byDateAsc);
 
       if (future.length === 0) {
+        return { phase: "offseason", label: "OFF SEASON" };
+      }
+
+      // Next game far in the future → between seasons, not in season.
+      const weeksToNext = Math.ceil((Date.parse(future[0].date) - t) / WEEK_MS);
+      if (weeksToNext > OFFSEASON_GAP_WEEKS) {
         return { phase: "offseason", label: "OFF SEASON" };
       }
 

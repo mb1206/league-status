@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createBaseDerivations, PLAYOFF_COUNTDOWN_WEEKS } from "./baseDerivations";
+import {
+  createBaseDerivations,
+  PLAYOFF_COUNTDOWN_WEEKS,
+  OFFSEASON_GAP_WEEKS,
+} from "./baseDerivations";
 import type { Game } from "../domain/types";
 
 const d = createBaseDerivations();
@@ -60,6 +64,30 @@ describe("seasonStatus", () => {
   it("OFF_SEASON when there are no future games", () => {
     const games = [game({ date: daysFromNow(-3), status: "final" })];
     expect(d.seasonStatus({ games, now: NOW }).phase).toBe("offseason");
+  });
+
+  it("OFF_SEASON when the next game is beyond the gap (next season already scheduled, e.g. NFL in July)", () => {
+    const games = [
+      game({ date: daysFromNow(66), seasonType: "regular" }), // ~9.4 weeks out
+      game({ date: daysFromNow(73), seasonType: "regular" }),
+    ];
+    expect(d.seasonStatus({ games, now: NOW }).phase).toBe("offseason");
+  });
+
+  it("IN_SEASON when the next game is within the gap (e.g. a bye/break)", () => {
+    const games = [game({ date: daysFromNow(20), seasonType: "regular" })];
+    expect(d.seasonStatus({ games, now: NOW }).phase).toBe("in_season");
+  });
+
+  it("offseason gap boundary: exactly the gap is in-season, one week beyond is offseason", () => {
+    const atGap = [
+      game({ date: daysFromNow(7 * OFFSEASON_GAP_WEEKS), seasonType: "regular" }),
+    ];
+    expect(d.seasonStatus({ games: atGap, now: NOW }).phase).toBe("in_season");
+    const beyond = [
+      game({ date: daysFromNow(7 * (OFFSEASON_GAP_WEEKS + 1)), seasonType: "regular" }),
+    ];
+    expect(d.seasonStatus({ games: beyond, now: NOW }).phase).toBe("offseason");
   });
 
   it("IN_SEASON when next game is regular and playoffs not near", () => {
