@@ -1,0 +1,136 @@
+:root {
+  --bg: #0f1115;
+  --panel: #1a1d24;
+  --line: #2a2f3a;
+  --text: #e7e9ee;
+  --muted: #9aa3b2;
+  --accent: #4f8cff;
+  --win: #3ecf8e;
+  --loss: #ff6b6b;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); }
+.app { max-width: 900px; margin: 0 auto; padding: 16px; }
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+.add-team-btn, .panel-error button {
+  background: var(--accent); color: white; border: none;
+  padding: 8px 14px; border-radius: 8px; cursor: pointer;
+}
+.empty-state { color: var(--muted); text-align: center; padding: 48px 0; }
+.sport-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.sport-chip {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 14px;
+}
+.sport-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: white; }
+.sport-chip.out-of-season { opacity: 0.45; }
+.team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.panel-skeleton { padding: 24px; color: var(--muted); }
+.panel-error { padding: 20px; display: flex; gap: 10px; align-items: center; }
+.panel-error button { background: var(--line); }
+.panel-header { position: relative; }
+.panel-remove {
+  position: absolute; top: 8px; right: 10px; background: none; border: none;
+  color: var(--muted); font-size: 20px; cursor: pointer;
+}
+.banner {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  /* extra right padding reserves space for the absolutely-positioned remove (×) button */
+  padding: 16px 44px 16px 16px; border-bottom: 1px solid var(--line);
+}
+.banner[data-phase="playoffs"], .banner[data-phase="playoffs_upcoming"] { background: linear-gradient(90deg, rgba(79,140,255,0.15), transparent); }
+/* Dim the team name + status for offseason, but NOT .banner-standing: an opacity
+   group on an ancestor of the division popover would trap its z-index and let the
+   Home-only toggle paint on top of it. */
+.banner[data-phase="offseason"] .banner-team,
+.banner[data-phase="offseason"] .banner-status { opacity: 0.7; }
+.banner-team { font-weight: 700; font-size: 18px; }
+.banner-logo { vertical-align: middle; object-fit: contain; border-radius: 4px; }
+.banner-league { color: var(--muted); font-weight: 400; }
+.banner-status { font-weight: 700; letter-spacing: 0.05em; color: var(--accent); }
+.banner-progress { position: relative; cursor: default; }
+.season-tooltip {
+  position: absolute; top: 100%; left: 0; margin-top: 6px; z-index: 10;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; font-weight: 400; color: var(--text);
+  letter-spacing: normal; text-transform: none; white-space: nowrap;
+  opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.banner-progress:hover .season-tooltip,
+.banner-progress:focus .season-tooltip { opacity: 1; visibility: visible; }
+.banner-standing { color: var(--muted); margin-left: auto; }
+.division-hover { position: relative; cursor: default; }
+.division-popover {
+  position: absolute; top: 100%; right: 0; margin-top: 6px; z-index: 10;
+  display: grid; grid-template-columns: auto auto 1fr auto; gap: 4px 8px; align-items: center;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 10px; font-size: 12px; font-weight: 400; color: var(--text);
+  letter-spacing: normal; white-space: nowrap; min-width: 220px;
+  opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.division-hover:hover .division-popover,
+.division-hover:focus .division-popover { opacity: 1; visibility: visible; }
+.division-row { display: contents; }
+.division-row.current .division-team,
+.division-row.current .division-record { color: var(--accent); font-weight: 700; }
+.division-rank { color: var(--muted); text-align: right; }
+.division-row img { border-radius: 3px; }
+.division-record { color: var(--muted); text-align: right; }
+.division-row.current .division-record { color: var(--accent); }
+.home-only-toggle {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  color: var(--muted); font-size: 13px;
+  width: fit-content; user-select: none; text-transform: none; letter-spacing: normal;
+}
+.switch { position: relative; display: inline-block; width: 34px; height: 20px; flex: none; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.switch-slider {
+  position: absolute; inset: 0; background: var(--line); border-radius: 999px;
+  transition: background 0.2s;
+}
+.switch-slider::before {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px;
+  background: #fff; border-radius: 50%; transition: transform 0.2s;
+}
+.switch input:checked + .switch-slider { background: var(--accent); }
+.switch input:checked + .switch-slider::before { transform: translateX(14px); }
+.switch input:focus-visible + .switch-slider { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Vertical padding lives on the columns (not the grid) so the divider grid item
+   can stretch the full body height, edge to edge. */
+.panel-games { display: grid; grid-template-columns: 1fr 1px 3fr; column-gap: 24px; padding: 0 16px; }
+.panel-games > .game-list { padding: 16px 0; }
+.panel-divider { background: var(--line); }
+@media (max-width: 560px) {
+  .panel-games { grid-template-columns: 1fr; }
+  .panel-divider { display: none; }
+  .panel-games > .game-list:first-child { border-bottom: 1px solid var(--line); }
+}
+.game-list-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; min-height: 20px; }
+.game-list-title { margin: 0; color: var(--muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.08em; }
+.game-list ul { list-style: none; margin: 0; padding: 0; }
+/* Upcoming: 2 columns of games, filled column-major (soonest down the left). */
+.game-list ul.two-column {
+  display: grid; grid-template-columns: 1fr 1fr;
+  grid-auto-flow: column; grid-template-rows: repeat(3, auto);
+  column-gap: 24px;
+}
+@media (max-width: 560px) { .game-list ul.two-column { grid-template-columns: 1fr; grid-auto-flow: row; } }
+.game-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.game-date { color: var(--muted); grid-column: 1 / -1; font-size: 12px; }
+.result-W { color: var(--win); font-weight: 700; }
+.result-L { color: var(--loss); font-weight: 700; }
+.game-list-empty { color: var(--muted); font-size: 14px; }
+.dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding-top: 10vh; }
+.dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
+.dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+.search-results { list-style: none; margin: 12px 0; padding: 0; max-height: 300px; overflow: auto; }
+.search-results button { width: 100%; text-align: left; background: none; border: none; color: var(--text); padding: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 6px; }
+.search-results button:hover { background: var(--line); }
+.result-league { color: var(--muted); font-size: 12px; margin-left: auto; }
