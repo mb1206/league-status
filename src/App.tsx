@@ -25,6 +25,7 @@ export default function App() {
         <TeamPanelList
           teams={followed}
           activeLeague={activeLeague}
+          inSeasonLeagues={inSeasonLeagues}
           onRemove={remove}
         />
       </main>

@@ -48,6 +48,24 @@ describe("TeamPanelList", () => {
     expect(screen.getByText("49ers")).toBeInTheDocument();
   });
 
+  it("sorts teams in in-season leagues ahead of out-of-season ones", () => {
+    const { container } = render(
+      <TeamPanelList
+        teams={[
+          { leagueId: "nfl", teamId: "Titans" },
+          { leagueId: "wnba", teamId: "Liberty" },
+        ]}
+        inSeasonLeagues={new Set(["wnba"])}
+        activeLeague={null}
+        onRemove={() => {}}
+      />,
+    );
+    const order = [...container.querySelectorAll(".team-panel")].map((p) =>
+      p.textContent?.includes("Liberty") ? "Liberty" : "Titans",
+    );
+    expect(order).toEqual(["Liberty", "Titans"]);
+  });
+
   it("ignores a stale filter for a league no longer followed", () => {
     render(
       <TeamPanelList
