@@ -73,7 +73,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .banner-standing { color: var(--muted); margin-left: auto; }
 .division-hover { position: relative; cursor: default; }
 .division-popover {
-  position: absolute; top: 100%; right: 0; z-index: 10;
+  position: absolute; top: 100%; right: 0; margin-top: 6px; z-index: 10;
   display: grid; grid-template-columns: auto auto 1fr auto; gap: 4px 8px; align-items: center;
   background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
   padding: 8px 14px; font-size: 12px; font-weight: 400; color: var(--text);
@@ -82,8 +82,12 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
-/* No gap between trigger and popover, so the mouse can reach the popover to scroll
-   (the popover is a child of .division-hover, so hovering it keeps it open). */
+/* Invisible bridge over the margin gap so the mouse can travel from the text into
+   the popover without the hover dropping. Lives on the trigger (not the popover,
+   whose overflow would clip it). */
+.division-hover::after {
+  content: ""; position: absolute; top: 100%; left: 0; right: 0; height: 8px;
+}
 .division-hover:hover .division-popover,
 .division-hover:focus .division-popover { opacity: 1; visibility: visible; pointer-events: auto; }
 .division-row { display: contents; }
