@@ -32,7 +32,9 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .sport-chip.empty { border-style: dotted; color: var(--muted); opacity: 0.55; }
 .sport-chip.empty:hover { opacity: 0.85; }
 .team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
-.team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+/* No overflow:hidden here — it would clip the division popover when a panel is
+   short. The banner rounds its own top corners so phase gradients stay inside. */
+.team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
 .panel-skeleton { padding: 24px; color: var(--muted); }
 .panel-error { padding: 20px; display: flex; gap: 10px; align-items: center; }
 .panel-error button { background: var(--line); }
@@ -45,6 +47,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
   /* extra right padding reserves space for the absolutely-positioned remove (×) button */
   padding: 16px 44px 16px 16px; border-bottom: 1px solid var(--line);
+  border-radius: 11px 11px 0 0;
 }
 .banner[data-phase="playoffs"], .banner[data-phase="playoffs_upcoming"] { background: linear-gradient(90deg, rgba(79,140,255,0.15), transparent); }
 /* Dim the team name + status for offseason, but NOT .banner-standing: an opacity
@@ -70,16 +73,19 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .banner-standing { color: var(--muted); margin-left: auto; }
 .division-hover { position: relative; cursor: default; }
 .division-popover {
-  position: absolute; top: 100%; right: 0; margin-top: 6px; z-index: 10;
+  position: absolute; top: 100%; right: 0; z-index: 10;
   display: grid; grid-template-columns: auto auto 1fr auto; gap: 4px 8px; align-items: center;
   background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
-  padding: 8px 10px; font-size: 12px; font-weight: 400; color: var(--text);
+  padding: 8px 14px; font-size: 12px; font-weight: 400; color: var(--text);
   letter-spacing: normal; white-space: nowrap; min-width: 220px;
+  max-height: min(45vh, 13rem); overflow-y: auto; scrollbar-gutter: stable;
   opacity: 0; visibility: hidden; transition: opacity 0.15s; pointer-events: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+/* No gap between trigger and popover, so the mouse can reach the popover to scroll
+   (the popover is a child of .division-hover, so hovering it keeps it open). */
 .division-hover:hover .division-popover,
-.division-hover:focus .division-popover { opacity: 1; visibility: visible; }
+.division-hover:focus .division-popover { opacity: 1; visibility: visible; pointer-events: auto; }
 .division-row { display: contents; }
 .division-row.current .division-team,
 .division-row.current .division-record { color: var(--accent); font-weight: 700; }
@@ -133,7 +139,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding-top: 10vh; }
 .dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
 .dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
-.search-results { list-style: none; margin: 12px 0; padding: 0; max-height: 300px; overflow: auto; }
+.search-results { list-style: none; margin: 12px 0; padding: 0 8px 0 0; max-height: 300px; overflow-y: auto; scrollbar-gutter: stable; }
 .search-results button { width: 100%; text-align: left; background: none; border: none; color: var(--text); padding: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 6px; }
 .search-results button:hover { background: var(--line); }
 .result-league { color: var(--muted); font-size: 12px; margin-left: auto; }
