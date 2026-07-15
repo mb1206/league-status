@@ -28,6 +28,9 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 }
 .sport-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: white; }
 .sport-chip.out-of-season { opacity: 0.45; }
+/* Leagues with no followed team yet: dotted outline + grayed, click to add. */
+.sport-chip.empty { border-style: dotted; color: var(--muted); opacity: 0.55; }
+.sport-chip.empty:hover { opacity: 0.85; }
 .team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .panel-skeleton { padding: 24px; color: var(--muted); }

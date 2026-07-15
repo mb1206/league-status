@@ -35,6 +35,14 @@ export function AddTeamDialog({ onAdd, onClose }: AddTeamDialogProps) {
     };
   }, [query, leagues]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <div className="dialog-backdrop" onClick={onClose}>
       <div className="dialog" onClick={(e) => e.stopPropagation()}>
@@ -60,9 +68,6 @@ export function AddTeamDialog({ onAdd, onClose }: AddTeamDialogProps) {
             </li>
           ))}
         </ul>
-        <button className="dialog-close" onClick={onClose}>
-          Close
-        </button>
       </div>
     </div>
   );

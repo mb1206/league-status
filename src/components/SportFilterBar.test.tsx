@@ -4,6 +4,13 @@ import userEvent from "@testing-library/user-event";
 import { SportFilterBar } from "./SportFilterBar";
 
 describe("SportFilterBar", () => {
+  // Filter chips (All + followed sports) carry aria-pressed; add-chips do not.
+  const filterLabels = () =>
+    screen
+      .getAllByRole("button")
+      .filter((b) => b.hasAttribute("aria-pressed"))
+      .map((b) => b.textContent);
+
   it("renders an 'All' chip plus one deduped chip per followed sport in registry order", () => {
     render(
       <SportFilterBar
@@ -12,8 +19,7 @@ describe("SportFilterBar", () => {
         onSelect={() => {}}
       />,
     );
-    const labels = screen.getAllByRole("button").map((b) => b.textContent);
-    expect(labels).toEqual(["All", "🏀 NBA", "🏈 NFL"]);
+    expect(filterLabels()).toEqual(["All", "🏀 NBA", "🏈 NFL"]);
   });
 
   it("calls onSelect with the league id when a sport chip is clicked", async () => {
@@ -69,8 +75,7 @@ describe("SportFilterBar", () => {
         onSelect={() => {}}
       />,
     );
-    const labels = screen.getAllByRole("button").map((b) => b.textContent);
-    expect(labels).toEqual(["All", "🏈 NFL", "🏀 NBA"]);
+    expect(filterLabels()).toEqual(["All", "🏈 NFL", "🏀 NBA"]);
   });
 
   it("marks out-of-season sports' chips as grayed out", () => {
@@ -90,14 +95,44 @@ describe("SportFilterBar", () => {
     ).not.toContain("out-of-season");
   });
 
-  it("renders nothing when one or fewer sports are followed", () => {
-    const { container } = render(
+  it("hides the filter chips (no 'All') when one or fewer sports are followed", () => {
+    render(
       <SportFilterBar
         followedLeagueIds={["nba", "nba"]}
         activeLeague={null}
         onSelect={() => {}}
+        onAddSport={() => {}}
       />,
     );
-    expect(container).toBeEmptyDOMElement();
+    expect(screen.queryByRole("button", { name: "All" })).toBeNull();
+  });
+
+  it("shows a dotted, grayed add-chip for each league with no followed team", () => {
+    render(
+      <SportFilterBar
+        followedLeagueIds={["nba", "nfl"]}
+        activeLeague={null}
+        onSelect={() => {}}
+        onAddSport={() => {}}
+      />,
+    );
+    // WNBA/MLB/NHL/MLS are unfollowed → add-chips; NBA/NFL are not.
+    const wnba = screen.getByRole("button", { name: "Add a WNBA team" });
+    expect(wnba.className).toContain("empty");
+    expect(screen.queryByRole("button", { name: "Add a NBA team" })).toBeNull();
+  });
+
+  it("invokes onAddSport when an add-chip is clicked", async () => {
+    const onAddSport = vi.fn();
+    render(
+      <SportFilterBar
+        followedLeagueIds={["nba", "nfl"]}
+        activeLeague={null}
+        onSelect={() => {}}
+        onAddSport={onAddSport}
+      />,
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Add a MLB team" }));
+    expect(onAddSport).toHaveBeenCalled();
   });
 });
