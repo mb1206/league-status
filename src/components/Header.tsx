@@ -5,7 +5,7 @@ interface HeaderProps {
 export function Header({ onAddClick }: HeaderProps) {
   return (
     <header className="app-header">
-      <h1>My Teams</h1>
+      <h1>track my teamzzz</h1>
       <button className="add-team-btn" onClick={onAddClick}>
         + Add team
       </button>
