@@ -2,8 +2,15 @@ import { describe, expect, it } from "vitest";
 import { LEAGUES, getLeagueModule, listLeagues } from "./registry";
 
 describe("registry", () => {
-  it("registers nba, wnba, nfl, and mlb", () => {
-    expect(Object.keys(LEAGUES).sort()).toEqual(["mlb", "nba", "nfl", "wnba"]);
+  it("registers nba, wnba, nfl, mlb, nhl, and mls", () => {
+    expect(Object.keys(LEAGUES).sort()).toEqual([
+      "mlb",
+      "mls",
+      "nba",
+      "nfl",
+      "nhl",
+      "wnba",
+    ]);
   });
 
   it("mlb is a config-only add on the ESPN baseball adapter", () => {
@@ -12,6 +19,15 @@ describe("registry", () => {
     expect(mlb.config.league).toBe("mlb");
     expect(mlb.config.icon).toBe("⚾");
     expect(typeof mlb.adapter.fetchSchedule).toBe("function");
+  });
+
+  it("nhl and mls are config-only adds on their ESPN sport adapters", () => {
+    const nhl = getLeagueModule("nhl");
+    expect(nhl.config.sport).toBe("hockey");
+    expect(nhl.config.league).toBe("nhl");
+    const mls = getLeagueModule("mls");
+    expect(mls.config.sport).toBe("soccer");
+    expect(mls.config.league).toBe("usa.1");
   });
 
   it("wnba shares the ESPN basketball adapter + base derivations (config-only add)", () => {
@@ -30,10 +46,17 @@ describe("registry", () => {
   });
 
   it("throws for an unknown league", () => {
-    expect(() => getLeagueModule("nhl")).toThrow("Unknown league");
+    expect(() => getLeagueModule("cfl")).toThrow("Unknown league");
   });
 
   it("listLeagues returns configs for the picker", () => {
-    expect(listLeagues().map((c) => c.id).sort()).toEqual(["mlb", "nba", "nfl", "wnba"]);
+    expect(listLeagues().map((c) => c.id).sort()).toEqual([
+      "mlb",
+      "mls",
+      "nba",
+      "nfl",
+      "nhl",
+      "wnba",
+    ]);
   });
 });

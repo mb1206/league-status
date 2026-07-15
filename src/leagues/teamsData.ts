@@ -761,5 +761,443 @@ export const TEAMS_BY_LEAGUE: Record<string, Team[]> = {
       "abbreviation": "WSH",
       "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/wsh.png"
     }
+  ],
+  "nhl": [
+    {
+      "id": "25",
+      "leagueId": "nhl",
+      "name": "Anaheim Ducks",
+      "abbreviation": "ANA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/ana.png"
+    },
+    {
+      "id": "1",
+      "leagueId": "nhl",
+      "name": "Boston Bruins",
+      "abbreviation": "BOS",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/bos.png"
+    },
+    {
+      "id": "2",
+      "leagueId": "nhl",
+      "name": "Buffalo Sabres",
+      "abbreviation": "BUF",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/buf.png"
+    },
+    {
+      "id": "3",
+      "leagueId": "nhl",
+      "name": "Calgary Flames",
+      "abbreviation": "CGY",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/cgy.png"
+    },
+    {
+      "id": "7",
+      "leagueId": "nhl",
+      "name": "Carolina Hurricanes",
+      "abbreviation": "CAR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/car.png"
+    },
+    {
+      "id": "4",
+      "leagueId": "nhl",
+      "name": "Chicago Blackhawks",
+      "abbreviation": "CHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/chi.png"
+    },
+    {
+      "id": "17",
+      "leagueId": "nhl",
+      "name": "Colorado Avalanche",
+      "abbreviation": "COL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/col.png"
+    },
+    {
+      "id": "29",
+      "leagueId": "nhl",
+      "name": "Columbus Blue Jackets",
+      "abbreviation": "CBJ",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/cbj.png"
+    },
+    {
+      "id": "9",
+      "leagueId": "nhl",
+      "name": "Dallas Stars",
+      "abbreviation": "DAL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/dal.png"
+    },
+    {
+      "id": "5",
+      "leagueId": "nhl",
+      "name": "Detroit Red Wings",
+      "abbreviation": "DET",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/det.png"
+    },
+    {
+      "id": "6",
+      "leagueId": "nhl",
+      "name": "Edmonton Oilers",
+      "abbreviation": "EDM",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/edm.png"
+    },
+    {
+      "id": "26",
+      "leagueId": "nhl",
+      "name": "Florida Panthers",
+      "abbreviation": "FLA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/fla.png"
+    },
+    {
+      "id": "8",
+      "leagueId": "nhl",
+      "name": "Los Angeles Kings",
+      "abbreviation": "LA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/la.png"
+    },
+    {
+      "id": "30",
+      "leagueId": "nhl",
+      "name": "Minnesota Wild",
+      "abbreviation": "MIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/min.png"
+    },
+    {
+      "id": "10",
+      "leagueId": "nhl",
+      "name": "Montreal Canadiens",
+      "abbreviation": "MTL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/mtl.png"
+    },
+    {
+      "id": "27",
+      "leagueId": "nhl",
+      "name": "Nashville Predators",
+      "abbreviation": "NSH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/nsh.png"
+    },
+    {
+      "id": "11",
+      "leagueId": "nhl",
+      "name": "New Jersey Devils",
+      "abbreviation": "NJ",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/nj.png"
+    },
+    {
+      "id": "12",
+      "leagueId": "nhl",
+      "name": "New York Islanders",
+      "abbreviation": "NYI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/nyi.png"
+    },
+    {
+      "id": "13",
+      "leagueId": "nhl",
+      "name": "New York Rangers",
+      "abbreviation": "NYR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/nyr.png"
+    },
+    {
+      "id": "14",
+      "leagueId": "nhl",
+      "name": "Ottawa Senators",
+      "abbreviation": "OTT",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/ott.png"
+    },
+    {
+      "id": "15",
+      "leagueId": "nhl",
+      "name": "Philadelphia Flyers",
+      "abbreviation": "PHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/phi.png"
+    },
+    {
+      "id": "16",
+      "leagueId": "nhl",
+      "name": "Pittsburgh Penguins",
+      "abbreviation": "PIT",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/pit.png"
+    },
+    {
+      "id": "18",
+      "leagueId": "nhl",
+      "name": "San Jose Sharks",
+      "abbreviation": "SJ",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/sj.png"
+    },
+    {
+      "id": "124292",
+      "leagueId": "nhl",
+      "name": "Seattle Kraken",
+      "abbreviation": "SEA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/sea.png"
+    },
+    {
+      "id": "19",
+      "leagueId": "nhl",
+      "name": "St. Louis Blues",
+      "abbreviation": "STL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/stl.png"
+    },
+    {
+      "id": "20",
+      "leagueId": "nhl",
+      "name": "Tampa Bay Lightning",
+      "abbreviation": "TB",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/tb.png"
+    },
+    {
+      "id": "21",
+      "leagueId": "nhl",
+      "name": "Toronto Maple Leafs",
+      "abbreviation": "TOR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/tor.png"
+    },
+    {
+      "id": "129764",
+      "leagueId": "nhl",
+      "name": "Utah Mammoth",
+      "abbreviation": "UTAH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/utah.png"
+    },
+    {
+      "id": "22",
+      "leagueId": "nhl",
+      "name": "Vancouver Canucks",
+      "abbreviation": "VAN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/van.png"
+    },
+    {
+      "id": "37",
+      "leagueId": "nhl",
+      "name": "Vegas Golden Knights",
+      "abbreviation": "VGK",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/vgk.png"
+    },
+    {
+      "id": "23",
+      "leagueId": "nhl",
+      "name": "Washington Capitals",
+      "abbreviation": "WSH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/wsh.png"
+    },
+    {
+      "id": "28",
+      "leagueId": "nhl",
+      "name": "Winnipeg Jets",
+      "abbreviation": "WPG",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/nhl/500/wpg.png"
+    }
+  ],
+  "mls": [
+    {
+      "id": "18418",
+      "leagueId": "mls",
+      "name": "Atlanta United FC",
+      "abbreviation": "ATL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/18418.png"
+    },
+    {
+      "id": "20906",
+      "leagueId": "mls",
+      "name": "Austin FC",
+      "abbreviation": "ATX",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/20906.png"
+    },
+    {
+      "id": "9720",
+      "leagueId": "mls",
+      "name": "CF Montréal",
+      "abbreviation": "MTL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/9720.png"
+    },
+    {
+      "id": "21300",
+      "leagueId": "mls",
+      "name": "Charlotte FC",
+      "abbreviation": "CLT",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/21300.png"
+    },
+    {
+      "id": "182",
+      "leagueId": "mls",
+      "name": "Chicago Fire FC",
+      "abbreviation": "CHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/182.png"
+    },
+    {
+      "id": "184",
+      "leagueId": "mls",
+      "name": "Colorado Rapids",
+      "abbreviation": "COL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/184.png"
+    },
+    {
+      "id": "183",
+      "leagueId": "mls",
+      "name": "Columbus Crew",
+      "abbreviation": "CLB",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/183.png"
+    },
+    {
+      "id": "193",
+      "leagueId": "mls",
+      "name": "D.C. United",
+      "abbreviation": "DC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/193.png"
+    },
+    {
+      "id": "18267",
+      "leagueId": "mls",
+      "name": "FC Cincinnati",
+      "abbreviation": "CIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/18267.png"
+    },
+    {
+      "id": "185",
+      "leagueId": "mls",
+      "name": "FC Dallas",
+      "abbreviation": "DAL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/185.png"
+    },
+    {
+      "id": "6077",
+      "leagueId": "mls",
+      "name": "Houston Dynamo FC",
+      "abbreviation": "HOU",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/6077.png"
+    },
+    {
+      "id": "20232",
+      "leagueId": "mls",
+      "name": "Inter Miami CF",
+      "abbreviation": "MIA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/20232.png"
+    },
+    {
+      "id": "187",
+      "leagueId": "mls",
+      "name": "LA Galaxy",
+      "abbreviation": "LA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/187.png"
+    },
+    {
+      "id": "18966",
+      "leagueId": "mls",
+      "name": "LAFC",
+      "abbreviation": "LAFC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/18966.png"
+    },
+    {
+      "id": "17362",
+      "leagueId": "mls",
+      "name": "Minnesota United FC",
+      "abbreviation": "MIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/17362.png"
+    },
+    {
+      "id": "18986",
+      "leagueId": "mls",
+      "name": "Nashville SC",
+      "abbreviation": "NSH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/18986.png"
+    },
+    {
+      "id": "189",
+      "leagueId": "mls",
+      "name": "New England Revolution",
+      "abbreviation": "NE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/189.png"
+    },
+    {
+      "id": "17606",
+      "leagueId": "mls",
+      "name": "New York City FC",
+      "abbreviation": "NYC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/17606.png"
+    },
+    {
+      "id": "12011",
+      "leagueId": "mls",
+      "name": "Orlando City SC",
+      "abbreviation": "ORL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/12011.png"
+    },
+    {
+      "id": "10739",
+      "leagueId": "mls",
+      "name": "Philadelphia Union",
+      "abbreviation": "PHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/10739.png"
+    },
+    {
+      "id": "9723",
+      "leagueId": "mls",
+      "name": "Portland Timbers",
+      "abbreviation": "POR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/9723.png"
+    },
+    {
+      "id": "4771",
+      "leagueId": "mls",
+      "name": "Real Salt Lake",
+      "abbreviation": "RSL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/4771.png"
+    },
+    {
+      "id": "190",
+      "leagueId": "mls",
+      "name": "Red Bull New York",
+      "abbreviation": "RBNY",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/190.png"
+    },
+    {
+      "id": "22529",
+      "leagueId": "mls",
+      "name": "San Diego FC",
+      "abbreviation": "SD",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/22529.png"
+    },
+    {
+      "id": "191",
+      "leagueId": "mls",
+      "name": "San Jose Earthquakes",
+      "abbreviation": "SJ",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/191.png"
+    },
+    {
+      "id": "9726",
+      "leagueId": "mls",
+      "name": "Seattle Sounders FC",
+      "abbreviation": "SEA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/9726.png"
+    },
+    {
+      "id": "186",
+      "leagueId": "mls",
+      "name": "Sporting Kansas City",
+      "abbreviation": "SKC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/186.png"
+    },
+    {
+      "id": "21812",
+      "leagueId": "mls",
+      "name": "St. Louis CITY SC",
+      "abbreviation": "STL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/21812.png"
+    },
+    {
+      "id": "7318",
+      "leagueId": "mls",
+      "name": "Toronto FC",
+      "abbreviation": "TOR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/7318.png"
+    },
+    {
+      "id": "9727",
+      "leagueId": "mls",
+      "name": "Vancouver Whitecaps",
+      "abbreviation": "VAN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/9727.png"
+    }
   ]
 };

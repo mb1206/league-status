@@ -47,11 +47,31 @@ const mlbModule = espnModule({
   hasPlayoffs: true,
 });
 
+const nhlModule = espnModule({
+  id: "nhl",
+  sport: "hockey",
+  league: "nhl",
+  displayName: "NHL",
+  icon: "🏒",
+  hasPlayoffs: true,
+});
+
+const mlsModule = espnModule({
+  id: "mls",
+  sport: "soccer",
+  league: "usa.1",
+  displayName: "MLS",
+  icon: "⚽",
+  hasPlayoffs: true,
+});
+
 export const LEAGUES: Record<string, LeagueModule> = {
   nba: nbaModule,
   wnba: wnbaModule,
   nfl: nflModule,
   mlb: mlbModule,
+  nhl: nhlModule,
+  mls: mlsModule,
 };
 
 export function getLeagueModule(leagueId: string): LeagueModule {
