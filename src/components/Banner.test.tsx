@@ -19,6 +19,37 @@ describe("Banner", () => {
     expect(screen.getByText(/53-29/)).toBeInTheDocument();
   });
 
+  it("renders the team logo image when a logoUrl is provided", () => {
+    const { container } = render(
+      <Banner
+        icon="🏀"
+        logoUrl="https://a.espncdn.com/lakers.png"
+        leagueName="NBA"
+        teamName="Los Angeles Lakers"
+        seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
+        standing={{ overall: "53-29" }}
+      />,
+    );
+    const img = container.querySelector("img.banner-logo") as HTMLImageElement | null;
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute("src")).toBe("https://a.espncdn.com/lakers.png");
+    expect(screen.queryByText("🏀")).toBeNull();
+  });
+
+  it("falls back to the league emoji when no logoUrl is provided", () => {
+    const { container } = render(
+      <Banner
+        icon="🏀"
+        leagueName="NBA"
+        teamName="Los Angeles Lakers"
+        seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
+        standing={{ overall: "53-29" }}
+      />,
+    );
+    expect(container.querySelector("img.banner-logo")).toBeNull();
+    expect(screen.getByText("🏀")).toBeInTheDocument();
+  });
+
   it("applies a phase-specific data attribute for styling", () => {
     const { container } = render(
       <Banner

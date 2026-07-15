@@ -38,6 +38,15 @@ describe("TeamPanel", () => {
     expect(screen.getByText("IN SEASON")).toBeInTheDocument();
   });
 
+  it("renders Past games column before Upcoming", () => {
+    mockStatus({ isLoading: false, isError: false, isSuccess: true, data: sample });
+    const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
+    const titles = Array.from(
+      container.querySelectorAll(".panel-games .game-list-title"),
+    ).map((el) => el.textContent);
+    expect(titles).toEqual(["Past", "Upcoming"]);
+  });
+
   it("shows an error card with a working Retry button", async () => {
     const refetch = vi.fn();
     mockStatus({ isLoading: false, isError: true, error: new Error("boom"), refetch });

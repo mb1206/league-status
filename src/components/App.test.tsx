@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "../App";
 import * as followed from "../hooks/useFollowedTeams";
@@ -37,6 +38,34 @@ describe("App", () => {
     });
     renderApp();
     expect(screen.getByText(/add a team/i)).toBeInTheDocument();
+  });
+
+  it("filters the visible panels when a sport chip is clicked", async () => {
+    vi.spyOn(followed, "useFollowedTeams").mockReturnValue({
+      followed: [
+        { leagueId: "nba", teamId: "Lakers" },
+        { leagueId: "nfl", teamId: "49ers" },
+      ],
+      add: vi.fn(),
+      remove: vi.fn(),
+    });
+    vi.spyOn(statusHook, "useTeamStatus").mockImplementation(
+      (team) =>
+        ({
+          isLoading: false,
+          isError: false,
+          isSuccess: true,
+          data: statusFor(team.teamId),
+        }) as ReturnType<typeof statusHook.useTeamStatus>,
+    );
+
+    renderApp();
+    expect(screen.getByText("Lakers")).toBeInTheDocument();
+    expect(screen.getByText("49ers")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "🏈 NFL" }));
+    expect(screen.queryByText("Lakers")).toBeNull();
+    expect(screen.getByText("49ers")).toBeInTheDocument();
   });
 
   it("isolates failure: one panel errors while another renders", () => {

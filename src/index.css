@@ -21,6 +21,12 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   padding: 8px 14px; border-radius: 8px; cursor: pointer;
 }
 .empty-state { color: var(--muted); text-align: center; padding: 48px 0; }
+.sport-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.sport-chip {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 14px;
+}
+.sport-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: white; }
 .team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .panel-skeleton { padding: 24px; color: var(--muted); }
@@ -39,6 +45,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .banner[data-phase="playoffs"], .banner[data-phase="playoffs_upcoming"] { background: linear-gradient(90deg, rgba(79,140,255,0.15), transparent); }
 .banner[data-phase="offseason"] { opacity: 0.7; }
 .banner-team { font-weight: 700; font-size: 18px; }
+.banner-logo { vertical-align: middle; object-fit: contain; border-radius: 4px; }
 .banner-league { color: var(--muted); font-weight: 400; }
 .banner-status { font-weight: 700; letter-spacing: 0.05em; color: var(--accent); }
 .banner-standing { color: var(--muted); margin-left: auto; }
