@@ -40,4 +40,12 @@ describe("AddTeamDialog", () => {
     await userEvent.click(screen.getByText(/Los Angeles Lakers/));
     expect(onAdd).toHaveBeenCalledWith({ leagueId: "nba", teamId: "13" });
   });
+
+  it("closes on Escape", async () => {
+    vi.spyOn(registry, "listLeagues").mockReturnValue([]);
+    const onClose = vi.fn();
+    render(<AddTeamDialog onAdd={() => {}} onClose={onClose} />);
+    await userEvent.keyboard("{Escape}");
+    expect(onClose).toHaveBeenCalled();
+  });
 });

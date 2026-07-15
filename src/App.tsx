@@ -20,6 +20,7 @@ export default function App() {
         activeLeague={activeLeague}
         inSeasonLeagues={inSeasonLeagues}
         onSelect={setActiveLeague}
+        onAddSport={() => setDialogOpen(true)}
       />
       <main>
         <TeamPanelList
