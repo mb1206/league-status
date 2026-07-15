@@ -1,4 +1,4 @@
-import type { SeasonStatus, Standing } from "../domain/types";
+import type { DivisionStanding, SeasonStatus, Standing } from "../domain/types";
 
 interface BannerProps {
   icon: string;
@@ -6,6 +6,8 @@ interface BannerProps {
   leagueName: string;
   teamName: string;
   hasPlayoffs?: boolean;
+  division?: DivisionStanding;
+  currentTeamId?: string;
   seasonStatus: SeasonStatus;
   standing: Standing;
 }
@@ -24,6 +26,8 @@ export function Banner({
   leagueName,
   teamName,
   hasPlayoffs = false,
+  division,
+  currentTeamId,
   seasonStatus,
   standing,
 }: BannerProps) {
@@ -54,7 +58,31 @@ export function Banner({
         )}
       </span>
       <span className="banner-standing">
-        {[standingText, standing.overall].filter(Boolean).join(" · ")}
+        {standingText &&
+          (division ? (
+            <span className="division-hover" tabIndex={0}>
+              {standingText}
+              <span className="division-popover" role="tooltip">
+                {division.entries.map((e, i) => (
+                  <span
+                    key={e.teamId}
+                    className={`division-row${e.teamId === currentTeamId ? " current" : ""}`}
+                  >
+                    <span className="division-rank">{i + 1}</span>
+                    {e.logoUrl && (
+                      <img src={e.logoUrl} alt="" aria-hidden width={16} height={16} />
+                    )}
+                    <span className="division-team">{e.name}</span>
+                    <span className="division-record">{e.record}</span>
+                  </span>
+                ))}
+              </span>
+            </span>
+          ) : (
+            standingText
+          ))}
+        {standingText && standing.overall ? " · " : ""}
+        {standing.overall}
       </span>
     </div>
   );

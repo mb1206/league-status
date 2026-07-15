@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TeamPanel } from "./TeamPanel";
 import * as hook from "../hooks/useTeamStatus";
+import * as standingsHook from "../hooks/useLeagueStandings";
 import type { TeamStatus } from "../domain/types";
 
 const team = { leagueId: "nba", teamId: "13" };
@@ -23,7 +24,12 @@ const sample: TeamStatus = {
 };
 
 describe("TeamPanel", () => {
-  beforeEach(() => vi.restoreAllMocks());
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.spyOn(standingsHook, "useLeagueStandings").mockReturnValue({
+      data: undefined,
+    } as ReturnType<typeof standingsHook.useLeagueStandings>);
+  });
 
   it("shows a skeleton while loading", () => {
     mockStatus({ isLoading: true, isError: false });

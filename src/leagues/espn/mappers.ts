@@ -5,10 +5,14 @@ import type {
   Team,
   GameTeamRef,
 } from "../../domain/types";
+import type { DivisionEntry, DivisionStanding } from "../../domain/types";
 import type { RawStanding } from "../types";
 import type {
   EspnCompetitor,
   EspnEvent,
+  EspnStandingsEntry,
+  EspnStandingsGroup,
+  EspnStandingsResponse,
   EspnTeamResponse,
 } from "./client";
 
@@ -39,6 +43,31 @@ export function mapStanding(res: EspnTeamResponse): RawStanding {
     recordSummary: res.team.record?.items?.[0]?.summary ?? "",
     standingSummaryText: res.team.standingSummary ?? res.standingSummary,
   };
+}
+
+function mapStandingsEntry(e: EspnStandingsEntry): DivisionEntry {
+  return {
+    teamId: e.team.id,
+    name: e.team.displayName,
+    abbreviation: e.team.abbreviation,
+    logoUrl: e.team.logos?.[0]?.href,
+    record: e.stats?.find((s) => s.name === "overall")?.displayValue ?? "",
+  };
+}
+
+// Walk the conference→division tree, collecting the leaf groups that actually hold
+// team entries. Leagues with sub-divisions (NBA/NFL) yield divisions; leagues that
+// group only by conference (WNBA) yield conferences.
+function collectLeafGroups(group: EspnStandingsGroup): DivisionStanding[] {
+  if (group.children?.length) return group.children.flatMap(collectLeafGroups);
+  if (group.standings?.entries.length) {
+    return [{ name: group.name, entries: group.standings.entries.map(mapStandingsEntry) }];
+  }
+  return [];
+}
+
+export function mapStandings(res: EspnStandingsResponse): DivisionStanding[] {
+  return (res.children ?? []).flatMap(collectLeafGroups);
 }
 
 function mapSeasonType(type: number | undefined): SeasonType {

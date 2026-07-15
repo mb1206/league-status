@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Banner } from "./Banner";
 import { GameList } from "./GameList";
 import { useTeamStatus } from "../hooks/useTeamStatus";
+import { useLeagueStandings } from "../hooks/useLeagueStandings";
 import { selectGames } from "../leagues/baseDerivations";
+import { findDivision } from "../leagues/divisions";
 import type { FollowedTeam } from "../hooks/useFollowedTeams";
 
 const PAST_GAMES = 3;
@@ -15,7 +17,12 @@ interface TeamPanelProps {
 
 export function TeamPanel({ team, onRemove }: TeamPanelProps) {
   const query = useTeamStatus(team);
+  const standings = useLeagueStandings(team.leagueId);
   const [homeOnly, setHomeOnly] = useState(false);
+
+  const teamId = query.data?.team.id;
+  const division =
+    standings.data && teamId ? findDivision(standings.data, teamId) : undefined;
 
   return (
     <section className="team-panel">
@@ -42,6 +49,8 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               leagueName={query.data.league.displayName}
               hasPlayoffs={query.data.league.hasPlayoffs}
               teamName={query.data.team.name}
+              division={division}
+              currentTeamId={query.data.team.id}
               seasonStatus={query.data.seasonStatus}
               standing={query.data.standing}
             />
@@ -61,6 +70,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
                 limit: PAST_GAMES,
               })}
             />
+            <div className="panel-divider" aria-hidden />
             <GameList
               title="Upcoming"
               showTime

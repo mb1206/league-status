@@ -11,6 +11,13 @@ describe("espnUrls", () => {
     expect(espnUrls.schedule(cfg, "13")).toBe(`${base}/teams/13/schedule`);
     expect(espnUrls.teams(cfg)).toBe(`${base}/teams`);
   });
+
+  it("builds the standings url on the core (apis/v2) base, which serves the real tree", () => {
+    // The site/v2 standings path returns only a stub link, so standings must use apis/v2.
+    expect(espnUrls.standings(cfg)).toBe(
+      "https://site.api.espn.com/apis/v2/sports/basketball/nba/standings?level=3",
+    );
+  });
 });
 
 describe("fetchJson", () => {

@@ -8,6 +8,7 @@ const config: LeagueConfig = {
   league: "nba",
   displayName: "NBA",
   icon: "🏀",
+  hasPlayoffs: true,
 };
 
 function mockFetchOnce(payload: unknown) {
@@ -74,6 +75,40 @@ describe("createEspnAdapter", () => {
     const games = await adapter.fetchSchedule("13");
     expect(games).toHaveLength(1);
     expect(games[0]).toMatchObject({ isHome: true, result: "W" });
+  });
+
+  it("fetchStandings maps the standings tree into division groups", async () => {
+    mockFetchOnce({
+      children: [
+        {
+          name: "Pacific Division",
+          standings: {
+            entries: [
+              {
+                team: { id: "13", displayName: "Los Angeles Lakers", abbreviation: "LAL" },
+                stats: [{ name: "overall", displayValue: "53-29" }],
+              },
+            ],
+          },
+        },
+      ],
+    });
+    const adapter = createEspnAdapter(config);
+    const groups = await adapter.fetchStandings();
+    expect(groups).toEqual([
+      {
+        name: "Pacific Division",
+        entries: [
+          {
+            teamId: "13",
+            name: "Los Angeles Lakers",
+            abbreviation: "LAL",
+            logoUrl: undefined,
+            record: "53-29",
+          },
+        ],
+      },
+    ]);
   });
 
   // ESPN's /teams list endpoint is not CORS-enabled, so search filters bundled

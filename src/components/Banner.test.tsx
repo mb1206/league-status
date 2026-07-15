@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { Banner } from "./Banner";
 
 describe("Banner", () => {
@@ -95,6 +95,48 @@ describe("Banner", () => {
       />,
     );
     expect(screen.queryByText(/%/)).toBeNull();
+  });
+
+  const division = {
+    name: "Western Conference",
+    entries: [
+      { teamId: "5", name: "Minnesota Lynx", abbreviation: "MIN", record: "22-3" },
+      { teamId: "14", name: "Seattle Storm", abbreviation: "SEA", record: "6-19" },
+    ],
+  };
+
+  it("shows the division standings popover, highlighting the current team", () => {
+    const { container } = render(
+      <Banner
+        icon="🏀"
+        leagueName="WNBA"
+        teamName="Seattle Storm"
+        currentTeamId="14"
+        division={division}
+        seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
+        standing={{ overall: "6-19", summary: "8th in Western Conference Division" }}
+      />,
+    );
+    const popover = container.querySelector(".division-popover") as HTMLElement;
+    expect(popover).not.toBeNull();
+    expect(within(popover).getByText("Minnesota Lynx")).toBeInTheDocument();
+    expect(within(popover).getByText("22-3")).toBeInTheDocument();
+    const currentRow = within(popover).getByText("6-19").closest(".division-row");
+    expect(currentRow?.className).toContain("current");
+  });
+
+  it("omits the division popover when no division data is provided", () => {
+    const { container } = render(
+      <Banner
+        icon="🏀"
+        leagueName="WNBA"
+        teamName="Seattle Storm"
+        seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
+        standing={{ overall: "6-19", summary: "8th in Western Conference Division" }}
+      />,
+    );
+    expect(container.querySelector(".division-popover")).toBeNull();
+    expect(screen.getByText(/8th in Western Conference Division/)).toBeInTheDocument();
   });
 
   it("applies a phase-specific data attribute for styling", () => {

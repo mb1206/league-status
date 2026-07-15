@@ -62,6 +62,19 @@ export interface SeasonStatus {
   progress?: SeasonProgress; // present while the regular season is underway
 }
 
+export interface DivisionEntry {
+  teamId: string;
+  name: string; // "Seattle Storm"
+  abbreviation: string; // "SEA"
+  logoUrl?: string;
+  record: string; // "6-19"
+}
+
+export interface DivisionStanding {
+  name: string; // "AFC South" / "Western Conference"
+  entries: DivisionEntry[]; // ordered best-to-worst standing
+}
+
 export interface TeamStatus {
   team: Team;
   league: LeagueConfig;

@@ -1,4 +1,5 @@
 import type {
+  DivisionStanding,
   Game,
   LeagueConfig,
   Standing,
@@ -20,6 +21,7 @@ export interface SeasonInput {
 export interface LeagueAdapter {
   fetchTeam(teamId: string): Promise<{ team: Team; standing: RawStanding }>;
   fetchSchedule(teamId: string): Promise<Game[]>;
+  fetchStandings(): Promise<DivisionStanding[]>;
   searchTeams(query: string): Promise<Team[]>;
 }
 

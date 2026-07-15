@@ -4,8 +4,9 @@ import {
   mapTeam,
   mapStanding,
   mapGame,
+  mapStandings,
 } from "./mappers";
-import type { EspnEvent, EspnTeamResponse } from "./client";
+import type { EspnEvent, EspnStandingsResponse, EspnTeamResponse } from "./client";
 
 describe("parseScore", () => {
   it("handles number, string, object, and missing", () => {
@@ -36,6 +37,83 @@ describe("mapTeam", () => {
       abbreviation: "LAL",
       logoUrl: "https://logo/lal.png",
     });
+  });
+});
+
+describe("mapStandings", () => {
+  it("flattens conference→division groups into leaf divisions with ranked entries", () => {
+    const res: EspnStandingsResponse = {
+      children: [
+        {
+          name: "American Football Conference",
+          children: [
+            {
+              name: "AFC South",
+              standings: {
+                entries: [
+                  {
+                    team: {
+                      id: "10",
+                      displayName: "Houston Texans",
+                      abbreviation: "HOU",
+                      logos: [{ href: "https://logo/hou.png" }],
+                    },
+                    stats: [{ name: "overall", displayValue: "9-4" }],
+                  },
+                  {
+                    team: { id: "34", displayName: "Tennessee Titans", abbreviation: "TEN" },
+                    stats: [{ name: "overall", displayValue: "3-10" }],
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    };
+    expect(mapStandings(res)).toEqual([
+      {
+        name: "AFC South",
+        entries: [
+          {
+            teamId: "10",
+            name: "Houston Texans",
+            abbreviation: "HOU",
+            logoUrl: "https://logo/hou.png",
+            record: "9-4",
+          },
+          {
+            teamId: "34",
+            name: "Tennessee Titans",
+            abbreviation: "TEN",
+            logoUrl: undefined,
+            record: "3-10",
+          },
+        ],
+      },
+    ]);
+  });
+
+  it("treats a conference with no sub-divisions as its own leaf group (e.g. WNBA)", () => {
+    const res: EspnStandingsResponse = {
+      children: [
+        {
+          name: "Western Conference",
+          standings: {
+            entries: [
+              {
+                team: { id: "14", displayName: "Seattle Storm", abbreviation: "SEA" },
+                stats: [{ name: "overall", displayValue: "6-19" }],
+              },
+            ],
+          },
+        },
+      ],
+    };
+    const groups = mapStandings(res);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].name).toBe("Western Conference");
+    expect(groups[0].entries[0].teamId).toBe("14");
   });
 });
 

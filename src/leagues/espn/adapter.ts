@@ -4,9 +4,10 @@ import {
   espnUrls,
   fetchJson,
   type EspnScheduleResponse,
+  type EspnStandingsResponse,
   type EspnTeamResponse,
 } from "./client";
-import { mapGame, mapStanding, mapTeam } from "./mappers";
+import { mapGame, mapStanding, mapStandings, mapTeam } from "./mappers";
 import { TEAMS_BY_LEAGUE } from "../teamsData";
 
 export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
@@ -23,6 +24,13 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
         espnUrls.schedule(config, teamId),
       );
       return (res.events ?? []).map((e) => mapGame(e, teamId));
+    },
+
+    async fetchStandings() {
+      const res = await fetchJson<EspnStandingsResponse>(
+        espnUrls.standings(config),
+      );
+      return mapStandings(res);
     },
 
     // ESPN's /teams list endpoint is not CORS-enabled, so we search bundled

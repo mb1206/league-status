@@ -4,6 +4,8 @@ export interface EspnPath {
 }
 
 const BASE = "https://site.api.espn.com/apis/site/v2/sports";
+// Standings live on a different ESPN base; the site/v2 path returns only a stub link.
+const CORE_BASE = "https://site.api.espn.com/apis/v2/sports";
 
 export const espnUrls = {
   team: (p: EspnPath, teamId: string) =>
@@ -11,6 +13,8 @@ export const espnUrls = {
   schedule: (p: EspnPath, teamId: string) =>
     `${BASE}/${p.sport}/${p.league}/teams/${teamId}/schedule`,
   teams: (p: EspnPath) => `${BASE}/${p.sport}/${p.league}/teams`,
+  standings: (p: EspnPath) =>
+    `${CORE_BASE}/${p.sport}/${p.league}/standings?level=3`,
 };
 
 export async function fetchJson<T = unknown>(url: string): Promise<T> {
@@ -54,6 +58,26 @@ export interface EspnEvent {
 
 export interface EspnScheduleResponse {
   events: EspnEvent[];
+}
+
+export interface EspnStandingsEntry {
+  team: {
+    id: string;
+    displayName: string;
+    abbreviation: string;
+    logos?: { href: string }[];
+  };
+  stats?: { name?: string; displayValue?: string }[];
+}
+
+export interface EspnStandingsGroup {
+  name: string;
+  children?: EspnStandingsGroup[];
+  standings?: { entries: EspnStandingsEntry[] };
+}
+
+export interface EspnStandingsResponse {
+  children?: EspnStandingsGroup[];
 }
 
 export interface EspnTeamsResponse {

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import App from "../App";
 import * as followed from "../hooks/useFollowedTeams";
 import * as statusHook from "../hooks/useTeamStatus";
+import * as standingsHook from "../hooks/useLeagueStandings";
 import type { TeamStatus } from "../domain/types";
 
 function renderApp() {
@@ -28,7 +29,12 @@ function statusFor(name: string): TeamStatus {
 }
 
 describe("App", () => {
-  beforeEach(() => vi.restoreAllMocks());
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    vi.spyOn(standingsHook, "useLeagueStandings").mockReturnValue({
+      data: undefined,
+    } as ReturnType<typeof standingsHook.useLeagueStandings>);
+  });
 
   it("shows an empty state when no teams are followed", () => {
     vi.spyOn(followed, "useFollowedTeams").mockReturnValue({

@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { TeamPanelList } from "./TeamPanelList";
 import * as hook from "../hooks/useTeamStatus";
+import * as standingsHook from "../hooks/useLeagueStandings";
 import type { TeamStatus } from "../domain/types";
 
 function statusFor(id: string, leagueId: string): TeamStatus {
@@ -18,6 +19,9 @@ function statusFor(id: string, leagueId: string): TeamStatus {
 describe("TeamPanelList", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    vi.spyOn(standingsHook, "useLeagueStandings").mockReturnValue({
+      data: undefined,
+    } as ReturnType<typeof standingsHook.useLeagueStandings>);
     vi.spyOn(hook, "useTeamStatus").mockImplementation(
       (team) =>
         ({
