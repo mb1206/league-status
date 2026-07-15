@@ -15,7 +15,7 @@ function mockStatus(overrides: Partial<ReturnType<typeof hook.useTeamStatus>>) {
 
 const sample: TeamStatus = {
   team: { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL" },
-  league: { id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀" },
+  league: { id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true },
   standing: { overall: "53-29", summary: "1st in Pacific Division" },
   seasonStatus: { phase: "in_season", label: "IN SEASON" },
   pastGames: [],
@@ -45,6 +45,65 @@ describe("TeamPanel", () => {
       container.querySelectorAll(".panel-games .game-list-title"),
     ).map((el) => el.textContent);
     expect(titles).toEqual(["Past", "Upcoming"]);
+  });
+
+  it("hides away games in both columns when 'Home only' is toggled on", async () => {
+    const g = (id: string, isHome: boolean, oppAbbr: string): TeamStatus["upcomingGames"][number] => ({
+      id,
+      date: "2026-04-01T23:30:00Z",
+      status: "scheduled",
+      seasonType: "regular",
+      isHome,
+      homeTeam: { id: "13", abbreviation: isHome ? "LAL" : oppAbbr },
+      awayTeam: { id: "2", abbreviation: isHome ? oppAbbr : "LAL" },
+    });
+    mockStatus({
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      data: {
+        ...sample,
+        upcomingGames: [g("u1", true, "GSW"), g("u2", false, "BOS")],
+        pastGames: [g("p1", true, "MIA"), g("p2", false, "NYK")],
+      },
+    });
+    render(<TeamPanel team={team} onRemove={() => {}} />);
+    // Both home (vs) and away (@) games visible initially.
+    expect(screen.getByText("@ BOS")).toBeInTheDocument();
+    expect(screen.getByText("@ NYK")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("checkbox", { name: /home only/i }));
+
+    expect(screen.queryByText("@ BOS")).toBeNull();
+    expect(screen.queryByText("@ NYK")).toBeNull();
+    expect(screen.getByText("vs GSW")).toBeInTheDocument();
+    expect(screen.getByText("vs MIA")).toBeInTheDocument();
+  });
+
+  it("caps Past at 3 games and Upcoming at 6", () => {
+    const g = (id: string): TeamStatus["upcomingGames"][number] => ({
+      id,
+      date: "2026-04-01T23:30:00Z",
+      status: "scheduled",
+      seasonType: "regular",
+      isHome: true,
+      homeTeam: { id: "13", abbreviation: "LAL" },
+      awayTeam: { id: "2", abbreviation: "GSW" },
+    });
+    mockStatus({
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      data: {
+        ...sample,
+        pastGames: Array.from({ length: 5 }, (_, i) => g(`p${i}`)),
+        upcomingGames: Array.from({ length: 8 }, (_, i) => g(`u${i}`)),
+      },
+    });
+    const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
+    const lists = container.querySelectorAll(".panel-games .game-list");
+    expect(lists[0].querySelectorAll(".game-row")).toHaveLength(3); // Past
+    expect(lists[1].querySelectorAll(".game-row")).toHaveLength(6); // Upcoming
   });
 
   it("shows an error card with a working Retry button", async () => {

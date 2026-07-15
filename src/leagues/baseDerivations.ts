@@ -1,4 +1,4 @@
-import type { Game, SeasonStatus, Standing } from "../domain/types";
+import type { Game, SeasonProgress, SeasonStatus, Standing } from "../domain/types";
 import type { LeagueDerivations, RawStanding, SeasonInput } from "./types";
 import { parseStandingSummary } from "./standingText";
 
@@ -8,10 +8,31 @@ export const PLAYOFF_COUNTDOWN_WEEKS = 10;
 // sits above any in-season break (All-Star, Olympic) and below any offseason.
 export const OFFSEASON_GAP_WEEKS = 6;
 const WEEK_MS = 7 * 86400000;
-const MAX_GAMES = 3;
 
 function byDateAsc(a: Game, b: Game): number {
   return Date.parse(a.date) - Date.parse(b.date);
+}
+
+// How far through the regular season a team is: completed games / total, plus the
+// last regular-season game's date. Undefined when the schedule has no regular games.
+export function seasonProgress(games: Game[]): SeasonProgress | undefined {
+  const regular = games.filter((g) => g.seasonType === "regular");
+  if (regular.length === 0) return undefined;
+  const total = regular.length;
+  const played = regular.filter((g) => g.status === "final").length;
+  const endDate = regular.reduce((max, g) => (g.date > max ? g.date : max), regular[0].date);
+  return { played, total, percent: Math.round((played / total) * 100), endDate };
+}
+
+// Presentation-layer selection: optionally keep only home games, then cap to a
+// limit. Kept separate from splitGames so the home filter runs across the full
+// schedule (yielding the next/last N *home* games, not home games among the next N).
+export function selectGames(
+  games: Game[],
+  { homeOnly, limit }: { homeOnly: boolean; limit: number },
+): Game[] {
+  const filtered = homeOnly ? games.filter((g) => g.isHome) : games;
+  return filtered.slice(0, limit);
 }
 
 export function createBaseDerivations(): LeagueDerivations {
@@ -31,12 +52,10 @@ export function createBaseDerivations(): LeagueDerivations {
       const t = now.getTime();
       const past = games
         .filter((g) => Date.parse(g.date) < t)
-        .sort((a, b) => byDateAsc(b, a)) // desc
-        .slice(0, MAX_GAMES);
+        .sort((a, b) => byDateAsc(b, a)); // desc
       const upcoming = games
         .filter((g) => Date.parse(g.date) >= t)
-        .sort(byDateAsc) // asc
-        .slice(0, MAX_GAMES);
+        .sort(byDateAsc); // asc
       return { past, upcoming };
     },
 
@@ -73,7 +92,7 @@ export function createBaseDerivations(): LeagueDerivations {
         }
       }
 
-      return { phase: "in_season", label: "IN SEASON" };
+      return { phase: "in_season", label: "IN SEASON", progress: seasonProgress(games) };
     },
   };
 }

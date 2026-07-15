@@ -19,7 +19,7 @@ function renderApp() {
 function statusFor(name: string): TeamStatus {
   return {
     team: { id: name, leagueId: "nba", name, abbreviation: name.slice(0, 3).toUpperCase() },
-    league: { id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀" },
+    league: { id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true },
     standing: { overall: "10-5" },
     seasonStatus: { phase: "in_season", label: "IN SEASON" },
     pastGames: [],

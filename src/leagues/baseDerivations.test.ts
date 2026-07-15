@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   createBaseDerivations,
+  selectGames,
+  seasonProgress,
   PLAYOFF_COUNTDOWN_WEEKS,
   OFFSEASON_GAP_WEEKS,
 } from "./baseDerivations";
@@ -43,7 +45,7 @@ describe("standingSummary", () => {
 });
 
 describe("splitGames", () => {
-  it("returns most-recent past (desc) and soonest upcoming (asc), max 3 each", () => {
+  it("returns all past (most-recent first) and all upcoming (soonest first), uncapped", () => {
     const games = [
       game({ id: "p1", date: daysFromNow(-5), status: "final" }),
       game({ id: "p2", date: daysFromNow(-1), status: "final" }),
@@ -55,12 +57,78 @@ describe("splitGames", () => {
       game({ id: "u4", date: daysFromNow(20) }),
     ];
     const { past, upcoming } = d.splitGames(games, NOW);
-    expect(past.map((g) => g.id)).toEqual(["p2", "p1", "p3"]);
-    expect(upcoming.map((g) => g.id)).toEqual(["u2", "u1", "u3"]);
+    expect(past.map((g) => g.id)).toEqual(["p2", "p1", "p3", "p4"]);
+    expect(upcoming.map((g) => g.id)).toEqual(["u2", "u1", "u3", "u4"]);
+  });
+});
+
+describe("selectGames", () => {
+  const games = [
+    game({ id: "a", isHome: true }),
+    game({ id: "b", isHome: false }),
+    game({ id: "c", isHome: true }),
+    game({ id: "d", isHome: false }),
+    game({ id: "e", isHome: true }),
+  ];
+
+  it("caps to the limit, preserving order", () => {
+    expect(
+      selectGames(games, { homeOnly: false, limit: 3 }).map((g) => g.id),
+    ).toEqual(["a", "b", "c"]);
+  });
+
+  it("keeps only home games before capping when homeOnly is set", () => {
+    expect(
+      selectGames(games, { homeOnly: true, limit: 3 }).map((g) => g.id),
+    ).toEqual(["a", "c", "e"]);
+  });
+
+  it("returns fewer than the limit when not enough home games exist", () => {
+    const twoHome = [game({ id: "a", isHome: true }), game({ id: "b", isHome: false })];
+    expect(
+      selectGames(twoHome, { homeOnly: true, limit: 3 }).map((g) => g.id),
+    ).toEqual(["a"]);
+  });
+});
+
+describe("seasonProgress", () => {
+  it("computes played/total/percent and the season end date from regular games", () => {
+    const games = [
+      game({ id: "a", seasonType: "regular", status: "final", date: daysFromNow(-10) }),
+      game({ id: "b", seasonType: "regular", status: "final", date: daysFromNow(-5) }),
+      game({ id: "c", seasonType: "regular", status: "scheduled", date: daysFromNow(5) }),
+      game({ id: "d", seasonType: "regular", status: "scheduled", date: daysFromNow(20) }),
+      game({ id: "pre", seasonType: "preseason", status: "final", date: daysFromNow(-30) }),
+    ];
+    expect(seasonProgress(games)).toEqual({
+      played: 2,
+      total: 4,
+      percent: 50,
+      endDate: daysFromNow(20),
+    });
+  });
+
+  it("returns undefined when there are no regular-season games", () => {
+    expect(seasonProgress([game({ seasonType: "preseason" })])).toBeUndefined();
   });
 });
 
 describe("seasonStatus", () => {
+  it("attaches season progress when in season", () => {
+    const games = [
+      game({ seasonType: "regular", status: "final", date: daysFromNow(-5) }),
+      game({ seasonType: "regular", status: "scheduled", date: daysFromNow(2) }),
+    ];
+    const s = d.seasonStatus({ games, now: NOW });
+    expect(s.phase).toBe("in_season");
+    expect(s.progress).toEqual({
+      played: 1,
+      total: 2,
+      percent: 50,
+      endDate: daysFromNow(2),
+    });
+  });
+
   it("OFF_SEASON when there are no future games", () => {
     const games = [game({ date: daysFromNow(-3), status: "final" })];
     expect(d.seasonStatus({ games, now: NOW }).phase).toBe("offseason");

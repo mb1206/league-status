@@ -4,6 +4,7 @@ export interface LeagueConfig {
   league: string; // ESPN league path: "nba"
   displayName: string; // "NBA"
   icon: string; // "🏀"
+  hasPlayoffs: boolean; // true → season progress reads "Playoffs start"; false → "Season ends"
 }
 
 export interface Team {
@@ -47,10 +48,18 @@ export type SeasonPhase =
   | "playoffs_upcoming"
   | "playoffs";
 
+export interface SeasonProgress {
+  played: number; // regular-season games completed
+  total: number; // regular-season games scheduled
+  percent: number; // 0-100, rounded
+  endDate: string; // ISO date of the last regular-season game
+}
+
 export interface SeasonStatus {
   phase: SeasonPhase;
   label: string; // "PLAYOFFS IN 3 WEEKS"
   weeksUntilPlayoffs?: number;
+  progress?: SeasonProgress; // present while the regular season is underway
 }
 
 export interface TeamStatus {

@@ -549,5 +549,217 @@ export const TEAMS_BY_LEAGUE: Record<string, Team[]> = {
       "abbreviation": "WSH",
       "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png"
     }
+  ],
+  "mlb": [
+    {
+      "id": "29",
+      "leagueId": "mlb",
+      "name": "Arizona Diamondbacks",
+      "abbreviation": "ARI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/ari.png"
+    },
+    {
+      "id": "11",
+      "leagueId": "mlb",
+      "name": "Athletics",
+      "abbreviation": "ATH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/ath.png"
+    },
+    {
+      "id": "15",
+      "leagueId": "mlb",
+      "name": "Atlanta Braves",
+      "abbreviation": "ATL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/atl.png"
+    },
+    {
+      "id": "1",
+      "leagueId": "mlb",
+      "name": "Baltimore Orioles",
+      "abbreviation": "BAL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/bal.png"
+    },
+    {
+      "id": "2",
+      "leagueId": "mlb",
+      "name": "Boston Red Sox",
+      "abbreviation": "BOS",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/bos.png"
+    },
+    {
+      "id": "16",
+      "leagueId": "mlb",
+      "name": "Chicago Cubs",
+      "abbreviation": "CHC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/chc.png"
+    },
+    {
+      "id": "4",
+      "leagueId": "mlb",
+      "name": "Chicago White Sox",
+      "abbreviation": "CHW",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/chw.png"
+    },
+    {
+      "id": "17",
+      "leagueId": "mlb",
+      "name": "Cincinnati Reds",
+      "abbreviation": "CIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/cin.png"
+    },
+    {
+      "id": "5",
+      "leagueId": "mlb",
+      "name": "Cleveland Guardians",
+      "abbreviation": "CLE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/cle.png"
+    },
+    {
+      "id": "27",
+      "leagueId": "mlb",
+      "name": "Colorado Rockies",
+      "abbreviation": "COL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/col.png"
+    },
+    {
+      "id": "6",
+      "leagueId": "mlb",
+      "name": "Detroit Tigers",
+      "abbreviation": "DET",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/det.png"
+    },
+    {
+      "id": "18",
+      "leagueId": "mlb",
+      "name": "Houston Astros",
+      "abbreviation": "HOU",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/hou.png"
+    },
+    {
+      "id": "7",
+      "leagueId": "mlb",
+      "name": "Kansas City Royals",
+      "abbreviation": "KC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/kc.png"
+    },
+    {
+      "id": "3",
+      "leagueId": "mlb",
+      "name": "Los Angeles Angels",
+      "abbreviation": "LAA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/laa.png"
+    },
+    {
+      "id": "19",
+      "leagueId": "mlb",
+      "name": "Los Angeles Dodgers",
+      "abbreviation": "LAD",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/lad.png"
+    },
+    {
+      "id": "28",
+      "leagueId": "mlb",
+      "name": "Miami Marlins",
+      "abbreviation": "MIA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/mia.png"
+    },
+    {
+      "id": "8",
+      "leagueId": "mlb",
+      "name": "Milwaukee Brewers",
+      "abbreviation": "MIL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/mil.png"
+    },
+    {
+      "id": "9",
+      "leagueId": "mlb",
+      "name": "Minnesota Twins",
+      "abbreviation": "MIN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/min.png"
+    },
+    {
+      "id": "21",
+      "leagueId": "mlb",
+      "name": "New York Mets",
+      "abbreviation": "NYM",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/nym.png"
+    },
+    {
+      "id": "10",
+      "leagueId": "mlb",
+      "name": "New York Yankees",
+      "abbreviation": "NYY",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/nyy.png"
+    },
+    {
+      "id": "22",
+      "leagueId": "mlb",
+      "name": "Philadelphia Phillies",
+      "abbreviation": "PHI",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/phi.png"
+    },
+    {
+      "id": "23",
+      "leagueId": "mlb",
+      "name": "Pittsburgh Pirates",
+      "abbreviation": "PIT",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/pit.png"
+    },
+    {
+      "id": "25",
+      "leagueId": "mlb",
+      "name": "San Diego Padres",
+      "abbreviation": "SD",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/sd.png"
+    },
+    {
+      "id": "26",
+      "leagueId": "mlb",
+      "name": "San Francisco Giants",
+      "abbreviation": "SF",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/sf.png"
+    },
+    {
+      "id": "12",
+      "leagueId": "mlb",
+      "name": "Seattle Mariners",
+      "abbreviation": "SEA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/sea.png"
+    },
+    {
+      "id": "24",
+      "leagueId": "mlb",
+      "name": "St. Louis Cardinals",
+      "abbreviation": "STL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/stl.png"
+    },
+    {
+      "id": "30",
+      "leagueId": "mlb",
+      "name": "Tampa Bay Rays",
+      "abbreviation": "TB",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/tb.png"
+    },
+    {
+      "id": "13",
+      "leagueId": "mlb",
+      "name": "Texas Rangers",
+      "abbreviation": "TEX",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/tex.png"
+    },
+    {
+      "id": "14",
+      "leagueId": "mlb",
+      "name": "Toronto Blue Jays",
+      "abbreviation": "TOR",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/tor.png"
+    },
+    {
+      "id": "20",
+      "leagueId": "mlb",
+      "name": "Washington Nationals",
+      "abbreviation": "WSH",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/mlb/500/wsh.png"
+    }
   ]
 };

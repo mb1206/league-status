@@ -15,6 +15,7 @@ const LEAGUES = [
   { id: "nba", sport: "basketball", league: "nba" },
   { id: "wnba", sport: "basketball", league: "wnba" },
   { id: "nfl", sport: "football", league: "nfl" },
+  { id: "mlb", sport: "baseball", league: "mlb" },
 ];
 
 async function fetchTeams(cfg) {
