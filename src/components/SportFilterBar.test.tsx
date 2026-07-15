@@ -60,6 +60,36 @@ describe("SportFilterBar", () => {
     );
   });
 
+  it("sorts in-season sports ahead of out-of-season ones", () => {
+    render(
+      <SportFilterBar
+        followedLeagueIds={["nba", "nfl"]}
+        inSeasonLeagues={new Set(["nfl"])}
+        activeLeague={null}
+        onSelect={() => {}}
+      />,
+    );
+    const labels = screen.getAllByRole("button").map((b) => b.textContent);
+    expect(labels).toEqual(["All", "🏈 NFL", "🏀 NBA"]);
+  });
+
+  it("marks out-of-season sports' chips as grayed out", () => {
+    render(
+      <SportFilterBar
+        followedLeagueIds={["nba", "nfl"]}
+        inSeasonLeagues={new Set(["nfl"])}
+        activeLeague={null}
+        onSelect={() => {}}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "🏀 NBA" }).className).toContain(
+      "out-of-season",
+    );
+    expect(
+      screen.getByRole("button", { name: "🏈 NFL" }).className,
+    ).not.toContain("out-of-season");
+  });
+
   it("renders nothing when one or fewer sports are followed", () => {
     const { container } = render(
       <SportFilterBar

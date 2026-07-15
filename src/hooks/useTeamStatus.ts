@@ -3,10 +3,12 @@ import type { TeamStatus } from "../domain/types";
 import { getLeagueModule } from "../leagues/registry";
 import type { FollowedTeam } from "./useFollowedTeams";
 
-export function useTeamStatus(team: FollowedTeam) {
-  return useQuery<TeamStatus>({
+// Query options shared by useTeamStatus and useQueries callers, so both hit the
+// same cache entry per team.
+export function teamStatusQuery(team: FollowedTeam) {
+  return {
     queryKey: ["teamStatus", team.leagueId, team.teamId],
-    queryFn: async () => {
+    queryFn: async (): Promise<TeamStatus> => {
       const mod = getLeagueModule(team.leagueId);
       // Parallel: team meta/standing and schedule fetch together.
       const [{ team: domainTeam, standing }, games] = await Promise.all([
@@ -24,5 +26,9 @@ export function useTeamStatus(team: FollowedTeam) {
         upcomingGames: upcoming,
       };
     },
-  });
+  };
+}
+
+export function useTeamStatus(team: FollowedTeam) {
+  return useQuery<TeamStatus>(teamStatusQuery(team));
 }

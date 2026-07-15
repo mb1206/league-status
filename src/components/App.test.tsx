@@ -6,6 +6,7 @@ import App from "../App";
 import * as followed from "../hooks/useFollowedTeams";
 import * as statusHook from "../hooks/useTeamStatus";
 import * as standingsHook from "../hooks/useLeagueStandings";
+import * as inSeasonHook from "../hooks/useInSeasonLeagues";
 import type { TeamStatus } from "../domain/types";
 
 function renderApp() {
@@ -34,6 +35,7 @@ describe("App", () => {
     vi.spyOn(standingsHook, "useLeagueStandings").mockReturnValue({
       data: undefined,
     } as ReturnType<typeof standingsHook.useLeagueStandings>);
+    vi.spyOn(inSeasonHook, "useInSeasonLeagues").mockReturnValue(new Set());
   });
 
   it("shows an empty state when no teams are followed", () => {

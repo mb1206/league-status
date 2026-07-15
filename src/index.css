@@ -27,6 +27,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 14px;
 }
 .sport-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: white; }
+.sport-chip.out-of-season { opacity: 0.45; }
 .team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
 .team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
 .panel-skeleton { padding: 24px; color: var(--muted); }
