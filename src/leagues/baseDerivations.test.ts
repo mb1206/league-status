@@ -111,6 +111,26 @@ describe("seasonProgress", () => {
   it("returns undefined when there are no regular-season games", () => {
     expect(seasonProgress([game({ seasonType: "preseason" })])).toBeUndefined();
   });
+
+  it("counts only primary-competition games when games are competition-tagged", () => {
+    const pl = (primary: boolean) => ({
+      shortName: primary ? "PL" : "UCL",
+      name: primary ? "Premier League" : "UEFA Champions League",
+      primary,
+    });
+    const games = [
+      // Two league games (one played), plus a cup game that must NOT be counted.
+      game({ id: "l1", status: "final", date: daysFromNow(-10), competition: pl(true) }),
+      game({ id: "l2", status: "scheduled", date: daysFromNow(20), competition: pl(true) }),
+      game({ id: "cup", status: "final", date: daysFromNow(-5), competition: pl(false) }),
+    ];
+    expect(seasonProgress(games)).toEqual({
+      played: 1,
+      total: 2,
+      percent: 50,
+      endDate: daysFromNow(20),
+    });
+  });
 });
 
 describe("seasonStatus", () => {

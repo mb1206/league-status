@@ -13,10 +13,15 @@ function byDateAsc(a: Game, b: Game): number {
   return Date.parse(a.date) - Date.parse(b.date);
 }
 
-// How far through the regular season a team is: completed games / total, plus the
-// last regular-season game's date. Undefined when the schedule has no regular games.
+// How far through the season a team is: completed games / total, plus the last
+// counted game's date. For multi-competition leagues (competition-tagged games)
+// only the primary competition counts, so cup ties don't inflate the league
+// season's N%. For single-competition leagues it falls back to season type.
+// Undefined when there are no games to count.
 export function seasonProgress(games: Game[]): SeasonProgress | undefined {
-  const regular = games.filter((g) => g.seasonType === "regular");
+  const regular = games.filter((g) =>
+    g.competition ? g.competition.primary : g.seasonType === "regular",
+  );
   if (regular.length === 0) return undefined;
   const total = regular.length;
   const played = regular.filter((g) => g.status === "final").length;

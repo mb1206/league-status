@@ -20,10 +20,35 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
     },
 
     async fetchSchedule(teamId) {
-      const res = await fetchJson<EspnScheduleResponse>(
-        espnUrls.schedule(config, teamId),
+      // Single-competition (US) leagues: one schedule fetch, no competition tag.
+      if (!config.competitions) {
+        const res = await fetchJson<EspnScheduleResponse>(
+          espnUrls.schedule(config, teamId),
+        );
+        return (res.events ?? []).map((e) => mapGame(e, teamId));
+      }
+
+      // Multi-competition leagues (e.g. Premier League): fetch every competition's
+      // schedule in parallel, tag each fixture with its competition, and drop any
+      // competition that errors or returns no events. Merge and sort by date.
+      const perCompetition = await Promise.all(
+        config.competitions.map(async (competition) => {
+          try {
+            const res = await fetchJson<EspnScheduleResponse>(
+              espnUrls.schedule(
+                { sport: config.sport, league: competition.slug },
+                teamId,
+              ),
+            );
+            return (res.events ?? []).map((e) => mapGame(e, teamId, competition));
+          } catch {
+            return [];
+          }
+        }),
       );
-      return (res.events ?? []).map((e) => mapGame(e, teamId));
+      return perCompetition
+        .flat()
+        .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     },
 
     async fetchStandings() {

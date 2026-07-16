@@ -1199,5 +1199,147 @@ export const TEAMS_BY_LEAGUE: Record<string, Team[]> = {
       "abbreviation": "VAN",
       "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/9727.png"
     }
+  ],
+  "epl": [
+    {
+      "id": "349",
+      "leagueId": "epl",
+      "name": "AFC Bournemouth",
+      "abbreviation": "BOU",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/349.png"
+    },
+    {
+      "id": "359",
+      "leagueId": "epl",
+      "name": "Arsenal",
+      "abbreviation": "ARS",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/359.png"
+    },
+    {
+      "id": "362",
+      "leagueId": "epl",
+      "name": "Aston Villa",
+      "abbreviation": "AVL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/362.png"
+    },
+    {
+      "id": "337",
+      "leagueId": "epl",
+      "name": "Brentford",
+      "abbreviation": "BRE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/337.png"
+    },
+    {
+      "id": "331",
+      "leagueId": "epl",
+      "name": "Brighton & Hove Albion",
+      "abbreviation": "BHA",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/331.png"
+    },
+    {
+      "id": "363",
+      "leagueId": "epl",
+      "name": "Chelsea",
+      "abbreviation": "CHE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/363.png"
+    },
+    {
+      "id": "388",
+      "leagueId": "epl",
+      "name": "Coventry City",
+      "abbreviation": "COV",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/388.png"
+    },
+    {
+      "id": "384",
+      "leagueId": "epl",
+      "name": "Crystal Palace",
+      "abbreviation": "CRY",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/384.png"
+    },
+    {
+      "id": "368",
+      "leagueId": "epl",
+      "name": "Everton",
+      "abbreviation": "EVE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/368.png"
+    },
+    {
+      "id": "370",
+      "leagueId": "epl",
+      "name": "Fulham",
+      "abbreviation": "FUL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/370.png"
+    },
+    {
+      "id": "306",
+      "leagueId": "epl",
+      "name": "Hull City",
+      "abbreviation": "HUL",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/306.png"
+    },
+    {
+      "id": "373",
+      "leagueId": "epl",
+      "name": "Ipswich Town",
+      "abbreviation": "IPS",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/373.png"
+    },
+    {
+      "id": "357",
+      "leagueId": "epl",
+      "name": "Leeds United",
+      "abbreviation": "LEE",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/357.png"
+    },
+    {
+      "id": "364",
+      "leagueId": "epl",
+      "name": "Liverpool",
+      "abbreviation": "LIV",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/364.png"
+    },
+    {
+      "id": "382",
+      "leagueId": "epl",
+      "name": "Manchester City",
+      "abbreviation": "MNC",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/382.png"
+    },
+    {
+      "id": "360",
+      "leagueId": "epl",
+      "name": "Manchester United",
+      "abbreviation": "MAN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/360.png"
+    },
+    {
+      "id": "361",
+      "leagueId": "epl",
+      "name": "Newcastle United",
+      "abbreviation": "NEW",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/361.png"
+    },
+    {
+      "id": "393",
+      "leagueId": "epl",
+      "name": "Nottingham Forest",
+      "abbreviation": "NFO",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/393.png"
+    },
+    {
+      "id": "366",
+      "leagueId": "epl",
+      "name": "Sunderland",
+      "abbreviation": "SUN",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/366.png"
+    },
+    {
+      "id": "367",
+      "leagueId": "epl",
+      "name": "Tottenham Hotspur",
+      "abbreviation": "TOT",
+      "logoUrl": "https://a.espncdn.com/i/teamlogos/soccer/500/367.png"
+    }
   ]
 };

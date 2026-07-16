@@ -1,3 +1,10 @@
+export interface Competition {
+  slug: string; // ESPN league path, e.g. "uefa.champions"
+  shortName: string; // badge text, e.g. "UCL"
+  name: string; // "UEFA Champions League"
+  primary?: boolean; // the league's own competition (drives season progress)
+}
+
 export interface LeagueConfig {
   id: string; // "nba"
   sport: string; // ESPN sport path: "basketball"
@@ -5,6 +12,9 @@ export interface LeagueConfig {
   displayName: string; // "NBA"
   icon: string; // "🏀"
   hasPlayoffs: boolean; // true → season progress reads "Playoffs start"; false → "Season ends"
+  // When set, a followed team's schedule fans out across these competitions,
+  // each fixture badged. Undefined for single-competition (US) leagues.
+  competitions?: Competition[];
 }
 
 export interface Team {
@@ -33,6 +43,9 @@ export interface Game {
   awayTeam: GameTeamRef;
   isHome: boolean; // relative to followed team
   result?: "W" | "L"; // when final, relative to followed team
+  // Set only for multi-competition leagues (e.g. Premier League); drives the
+  // per-row badge and the primary-competition season-progress count.
+  competition?: { shortName: string; name: string; primary: boolean };
 }
 
 export interface Standing {

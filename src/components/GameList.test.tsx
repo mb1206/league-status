@@ -51,4 +51,20 @@ describe("GameList", () => {
     render(<GameList title="Upcoming" games={[upcoming]} />);
     expect(screen.queryByText(/\d?\d:\d\d/)).toBeNull();
   });
+
+  it("renders a competition badge when the game is competition-tagged", () => {
+    const tagged: Game = {
+      ...upcoming,
+      competition: { shortName: "UCL", name: "UEFA Champions League", primary: false },
+    };
+    render(<GameList title="Upcoming" games={[tagged]} />);
+    const badge = screen.getByText("UCL");
+    expect(badge).toBeInTheDocument();
+    expect(badge).toHaveAttribute("title", "UEFA Champions League");
+  });
+
+  it("omits the badge when the game has no competition", () => {
+    render(<GameList title="Upcoming" games={[upcoming]} />);
+    expect(screen.queryByText("UCL")).toBeNull();
+  });
 });

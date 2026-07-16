@@ -204,6 +204,23 @@ describe("mapGame", () => {
     expect(g.result).toBe("L");
   });
 
+  it("tags the game with the passed competition", () => {
+    const g = mapGame(finalEvent, "13", {
+      shortName: "UCL",
+      name: "UEFA Champions League",
+      primary: false,
+    });
+    expect(g.competition).toEqual({
+      shortName: "UCL",
+      name: "UEFA Champions League",
+      primary: false,
+    });
+  });
+
+  it("leaves competition unset when none is passed", () => {
+    expect(mapGame(finalEvent, "13").competition).toBeUndefined();
+  });
+
   it("has no result for a scheduled game", () => {
     const scheduled: EspnEvent = {
       id: "500",

@@ -65,6 +65,28 @@ const mlsModule = espnModule({
   hasPlayoffs: true,
 });
 
+// Premier League clubs play across several competitions; a followed team's
+// schedule merges fixtures from all of them, each badged. Standing and season
+// progress still come from the league itself (the `primary` competition).
+const premierLeagueModule = espnModule({
+  id: "epl",
+  sport: "soccer",
+  league: "eng.1",
+  displayName: "Premier League",
+  icon: "⚽",
+  hasPlayoffs: false,
+  competitions: [
+    { slug: "eng.1", shortName: "PL", name: "Premier League", primary: true },
+    { slug: "eng.fa", shortName: "FA CUP", name: "FA Cup" },
+    { slug: "eng.league_cup", shortName: "CARABAO", name: "Carabao Cup" },
+    { slug: "uefa.champions", shortName: "UCL", name: "UEFA Champions League" },
+    { slug: "uefa.europa", shortName: "UEL", name: "UEFA Europa League" },
+    { slug: "uefa.europa.conf", shortName: "UECL", name: "UEFA Europa Conference League" },
+    { slug: "eng.charity", shortName: "SHIELD", name: "Community Shield" },
+    { slug: "fifa.cwc", shortName: "CWC", name: "FIFA Club World Cup" },
+  ],
+});
+
 export const LEAGUES: Record<string, LeagueModule> = {
   nba: nbaModule,
   wnba: wnbaModule,
@@ -72,6 +94,7 @@ export const LEAGUES: Record<string, LeagueModule> = {
   mlb: mlbModule,
   nhl: nhlModule,
   mls: mlsModule,
+  epl: premierLeagueModule,
 };
 
 export function getLeagueModule(leagueId: string): LeagueModule {
