@@ -53,6 +53,11 @@ export function GameList({
           {games.map((g) => (
             <li key={g.id} className="game-row">
               <span className="game-opp">{opponent(g)}</span>
+              {g.competition && (
+                <span className="game-comp" title={g.competition.name}>
+                  {g.competition.shortName}
+                </span>
+              )}
               {g.result && <span className={`game-result result-${g.result}`}>{g.result}</span>}
               <span className="game-score">{scoreText(g)}</span>
               <span className="game-date">{dateText(g.date, showTime)}</span>

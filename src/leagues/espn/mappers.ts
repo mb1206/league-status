@@ -1,4 +1,5 @@
 import type {
+  Competition,
   Game,
   GameStatus,
   SeasonType,
@@ -90,7 +91,11 @@ function toRef(c: EspnCompetitor): GameTeamRef {
   };
 }
 
-export function mapGame(event: EspnEvent, followedTeamId: string): Game {
+export function mapGame(
+  event: EspnEvent,
+  followedTeamId: string,
+  competition?: Competition,
+): Game {
   const comp = event.competitions[0];
   const home = comp.competitors.find((c) => c.homeAway === "home")!;
   const away = comp.competitors.find((c) => c.homeAway === "away")!;
@@ -111,5 +116,12 @@ export function mapGame(event: EspnEvent, followedTeamId: string): Game {
     awayTeam: toRef(away),
     isHome: mine?.homeAway === "home",
     result,
+    ...(competition && {
+      competition: {
+        shortName: competition.shortName,
+        name: competition.name,
+        primary: competition.primary ?? false,
+      },
+    }),
   };
 }

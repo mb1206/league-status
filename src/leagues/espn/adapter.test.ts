@@ -18,6 +18,38 @@ function mockFetchOnce(payload: unknown) {
   );
 }
 
+// Route fetch responses by URL substring. A value of `null` simulates a failed
+// (non-ok) response for that competition.
+function mockFetchByUrl(routes: { match: string; payload: unknown }[]) {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) => {
+      const route = routes.find((r) => url.includes(r.match));
+      if (!route || route.payload === null) {
+        return { ok: false, status: 404, json: async () => ({}) };
+      }
+      return { ok: true, json: async () => route.payload };
+    }),
+  );
+}
+
+function scheduleEvent(id: string, date: string, homeId: string) {
+  return {
+    id,
+    date,
+    seasonType: { type: 13481 },
+    competitions: [
+      {
+        status: { type: { state: "pre" } },
+        competitors: [
+          { homeAway: "home", team: { id: homeId, abbreviation: "ARS" } },
+          { homeAway: "away", team: { id: "999", abbreviation: "OPP" } },
+        ],
+      },
+    ],
+  };
+}
+
 describe("createEspnAdapter", () => {
   afterEach(() => vi.restoreAllMocks());
 
@@ -75,6 +107,58 @@ describe("createEspnAdapter", () => {
     const games = await adapter.fetchSchedule("13");
     expect(games).toHaveLength(1);
     expect(games[0]).toMatchObject({ isHome: true, result: "W" });
+  });
+
+  it("fetchSchedule fans out across competitions, tags badges, merges by date, and drops empties", async () => {
+    const eplConfig: LeagueConfig = {
+      id: "epl",
+      sport: "soccer",
+      league: "eng.1",
+      displayName: "Premier League",
+      icon: "⚽",
+      hasPlayoffs: false,
+      competitions: [
+        { slug: "eng.1", shortName: "PL", name: "Premier League", primary: true },
+        { slug: "uefa.champions", shortName: "UCL", name: "UEFA Champions League" },
+        { slug: "eng.fa", shortName: "FA CUP", name: "FA Cup" },
+      ],
+    };
+    mockFetchByUrl([
+      // Chronologically the UCL game is first, so a correct merge reorders it ahead
+      // of the later PL game even though PL is fetched first.
+      { match: "eng.1", payload: { events: [scheduleEvent("pl1", "2026-03-10T15:00Z", "359")] } },
+      { match: "uefa.champions", payload: { events: [scheduleEvent("ucl1", "2026-03-05T20:00Z", "359")] } },
+      { match: "eng.fa", payload: { events: [] } }, // empty competition drops out
+    ]);
+    const adapter = createEspnAdapter(eplConfig);
+    const games = await adapter.fetchSchedule("359");
+
+    expect(games.map((g) => g.id)).toEqual(["ucl1", "pl1"]);
+    expect(games.map((g) => g.competition?.shortName)).toEqual(["UCL", "PL"]);
+    expect(games.find((g) => g.id === "pl1")?.competition?.primary).toBe(true);
+    expect(games.find((g) => g.id === "ucl1")?.competition?.primary).toBe(false);
+  });
+
+  it("fetchSchedule ignores a competition whose request fails", async () => {
+    const eplConfig: LeagueConfig = {
+      id: "epl",
+      sport: "soccer",
+      league: "eng.1",
+      displayName: "Premier League",
+      icon: "⚽",
+      hasPlayoffs: false,
+      competitions: [
+        { slug: "eng.1", shortName: "PL", name: "Premier League", primary: true },
+        { slug: "uefa.champions", shortName: "UCL", name: "UEFA Champions League" },
+      ],
+    };
+    mockFetchByUrl([
+      { match: "eng.1", payload: { events: [scheduleEvent("pl1", "2026-03-10T15:00Z", "359")] } },
+      { match: "uefa.champions", payload: null }, // 404 → ignored
+    ]);
+    const adapter = createEspnAdapter(eplConfig);
+    const games = await adapter.fetchSchedule("359");
+    expect(games.map((g) => g.id)).toEqual(["pl1"]);
   });
 
   it("fetchStandings maps the standings tree into division groups", async () => {
