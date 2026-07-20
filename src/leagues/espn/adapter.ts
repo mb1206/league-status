@@ -1,4 +1,4 @@
-import type { LeagueConfig } from "../../domain/types";
+import type { Game, LeagueConfig } from "../../domain/types";
 import type { LeagueAdapter } from "../types";
 import {
   espnUrls,
@@ -25,7 +25,9 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
         const res = await fetchJson<EspnScheduleResponse>(
           espnUrls.schedule(config, teamId),
         );
-        return (res.events ?? []).map((e) => mapGame(e, teamId));
+        return (res.events ?? [])
+          .map((e) => mapGame(e, teamId))
+          .filter((g): g is Game => g !== undefined);
       }
 
       // Multi-competition leagues (e.g. Premier League): fetch every competition's
@@ -40,7 +42,9 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
                 teamId,
               ),
             );
-            return (res.events ?? []).map((e) => mapGame(e, teamId, competition));
+            return (res.events ?? [])
+              .map((e) => mapGame(e, teamId, competition))
+              .filter((g): g is Game => g !== undefined);
           } catch {
             return [];
           }

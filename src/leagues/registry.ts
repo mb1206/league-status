@@ -1,13 +1,11 @@
 import type { LeagueConfig } from "../domain/types";
 import type { LeagueModule } from "./types";
 import { createEspnAdapter } from "./espn/adapter";
-import { createBaseDerivations } from "./baseDerivations";
 
 function espnModule(config: LeagueConfig): LeagueModule {
   return {
     config,
     adapter: createEspnAdapter(config),
-    derivations: createBaseDerivations(),
   };
 }
 

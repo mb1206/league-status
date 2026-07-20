@@ -2,8 +2,6 @@ import type {
   DivisionStanding,
   Game,
   LeagueConfig,
-  Standing,
-  SeasonStatus,
   Team,
 } from "../domain/types";
 
@@ -25,14 +23,7 @@ export interface LeagueAdapter {
   searchTeams(query: string): Promise<Team[]>;
 }
 
-export interface LeagueDerivations {
-  seasonStatus(input: SeasonInput): SeasonStatus;
-  standingSummary(raw: RawStanding): Standing;
-  splitGames(games: Game[], now: Date): { past: Game[]; upcoming: Game[] };
-}
-
 export interface LeagueModule {
   config: LeagueConfig;
   adapter: LeagueAdapter;
-  derivations: LeagueDerivations;
 }

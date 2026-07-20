@@ -95,10 +95,15 @@ export function mapGame(
   event: EspnEvent,
   followedTeamId: string,
   competition?: Competition,
-): Game {
+): Game | undefined {
+  // Guard the external-data invariants: a well-formed event has a first
+  // competition with both a home and an away competitor. A malformed event
+  // (no competitions, or a missing side) is skipped rather than throwing.
   const comp = event.competitions[0];
-  const home = comp.competitors.find((c) => c.homeAway === "home")!;
-  const away = comp.competitors.find((c) => c.homeAway === "away")!;
+  if (!comp) return undefined;
+  const home = comp.competitors.find((c) => c.homeAway === "home");
+  const away = comp.competitors.find((c) => c.homeAway === "away");
+  if (!home || !away) return undefined;
   const mine = comp.competitors.find((c) => c.team.id === followedTeamId);
   const status = mapStatus(comp.status.type.state);
 

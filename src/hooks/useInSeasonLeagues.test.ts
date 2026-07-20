@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { collectInSeasonLeagues } from "./useInSeasonLeagues";
+import { byInSeasonFirst, collectInSeasonLeagues } from "./useInSeasonLeagues";
 import type { TeamStatus } from "../domain/types";
 
 function status(leagueId: string, phase: TeamStatus["seasonStatus"]["phase"]): TeamStatus {
@@ -34,5 +34,27 @@ describe("collectInSeasonLeagues", () => {
   it("ignores undefined (still-loading) statuses", () => {
     const set = collectInSeasonLeagues([undefined, status("nba", "in_season")]);
     expect([...set]).toEqual(["nba"]);
+  });
+});
+
+describe("byInSeasonFirst", () => {
+  it("sorts in-season items before out-of-season ones", () => {
+    const inSeason = new Set(["nba", "mlb"]);
+    const items = [{ id: "nfl" }, { id: "nba" }, { id: "nhl" }, { id: "mlb" }];
+    const ordered = [...items].sort(byInSeasonFirst(inSeason, (c) => c.id));
+    expect(ordered.map((c) => c.id)).toEqual(["nba", "mlb", "nfl", "nhl"]);
+  });
+
+  it("is stable among same-state items and works with a leagueId key", () => {
+    const inSeason = new Set(["nba"]);
+    const items = [
+      { leagueId: "nfl", teamId: "a" },
+      { leagueId: "nba", teamId: "b" },
+      { leagueId: "nfl", teamId: "c" },
+      { leagueId: "nba", teamId: "d" },
+    ];
+    const ordered = [...items].sort(byInSeasonFirst(inSeason, (t) => t.leagueId));
+    // in-season first, original relative order preserved within each group
+    expect(ordered.map((t) => t.teamId)).toEqual(["b", "d", "a", "c"]);
   });
 });

@@ -1,4 +1,5 @@
 import { listLeagues } from "../leagues/registry";
+import { byInSeasonFirst } from "../hooks/useInSeasonLeagues";
 
 interface SportFilterBarProps {
   followedLeagueIds: string[];
@@ -20,10 +21,7 @@ export function SportFilterBar({
   // Followed sports become filter chips, in-season floated to the front.
   const followedSports = all
     .filter((c) => followed.has(c.id))
-    .sort(
-      (a, b) =>
-        Number(inSeasonLeagues.has(b.id)) - Number(inSeasonLeagues.has(a.id)),
-    );
+    .sort(byInSeasonFirst(inSeasonLeagues, (c) => c.id));
   const unfollowedSports = all.filter((c) => !followed.has(c.id));
 
   // Filtering only makes sense with 2+ followed sports; the add-chips show
