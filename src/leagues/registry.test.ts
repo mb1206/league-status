@@ -57,7 +57,7 @@ describe("registry", () => {
     expect(nba.config.sport).toBe("basketball");
     expect(nba.config.icon).toBe("🏀");
     expect(typeof nba.adapter.fetchTeam).toBe("function");
-    expect(typeof nba.derivations.seasonStatus).toBe("function");
+    expect(typeof nba.adapter.fetchSchedule).toBe("function");
   });
 
   it("throws for an unknown league", () => {

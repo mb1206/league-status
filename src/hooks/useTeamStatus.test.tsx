@@ -20,11 +20,6 @@ const fakeModule = {
     fetchSchedule: vi.fn(),
     searchTeams: vi.fn(),
   },
-  derivations: {
-    standingSummary: vi.fn(() => ({ overall: "53-29" })),
-    splitGames: vi.fn(() => ({ past: [], upcoming: [] })),
-    seasonStatus: vi.fn(() => ({ phase: "in_season", label: "IN SEASON" })),
-  },
 } as unknown as LeagueModule;
 
 describe("useTeamStatus", () => {
@@ -46,7 +41,8 @@ describe("useTeamStatus", () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.team.name).toBe("Lakers");
-    expect(result.current.data?.seasonStatus.label).toBe("IN SEASON");
+    // Empty schedule ([]) → real seasonStatus derives the offseason label.
+    expect(result.current.data?.seasonStatus.label).toBe("OFF SEASON");
     expect(fakeModule.adapter.fetchTeam).toHaveBeenCalledWith("13");
     expect(fakeModule.adapter.fetchSchedule).toHaveBeenCalledWith("13");
   });

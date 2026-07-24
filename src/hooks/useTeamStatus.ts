@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { TeamStatus } from "../domain/types";
 import { getLeagueModule } from "../leagues/registry";
+import { seasonStatus, splitGames, standingSummary } from "../leagues/baseDerivations";
 import type { FollowedTeam } from "./useFollowedTeams";
 
 // Query options shared by useTeamStatus and useQueries callers, so both hit the
@@ -16,12 +17,12 @@ export function teamStatusQuery(team: FollowedTeam) {
         mod.adapter.fetchSchedule(team.teamId),
       ]);
       const now = new Date();
-      const { past, upcoming } = mod.derivations.splitGames(games, now);
+      const { past, upcoming } = splitGames(games, now);
       return {
         team: domainTeam,
         league: mod.config,
-        standing: mod.derivations.standingSummary(standing),
-        seasonStatus: mod.derivations.seasonStatus({ games, now }),
+        standing: standingSummary(standing),
+        seasonStatus: seasonStatus({ games, now }),
         pastGames: past,
         upcomingGames: upcoming,
       };

@@ -14,6 +14,19 @@ export function collectInSeasonLeagues(
   return leagues;
 }
 
+// Comparator factory that floats in-season items to the front while preserving
+// the relative order of same-state items (stable). `getLeagueId` extracts the
+// league id from an item, so this works for both team panels (`.leagueId`) and
+// league configs (`.id`).
+export function byInSeasonFirst<T>(
+  inSeasonLeagues: Set<string>,
+  getLeagueId: (item: T) => string,
+): (a: T, b: T) => number {
+  return (a, b) =>
+    Number(inSeasonLeagues.has(getLeagueId(b))) -
+    Number(inSeasonLeagues.has(getLeagueId(a)));
+}
+
 // Reads the (cache-shared) status of every followed team and reports which leagues
 // are in season. Keyed by the same query as useTeamStatus, so no extra fetches.
 export function useInSeasonLeagues(followed: FollowedTeam[]): Set<string> {

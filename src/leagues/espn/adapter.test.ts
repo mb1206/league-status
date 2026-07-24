@@ -109,6 +109,43 @@ describe("createEspnAdapter", () => {
     expect(games[0]).toMatchObject({ isHome: true, result: "W" });
   });
 
+  it("fetchSchedule skips malformed events and keeps well-formed ones", async () => {
+    mockFetchOnce({
+      events: [
+        {
+          id: "bad",
+          date: "2026-04-01T02:30Z",
+          seasonType: { type: 2 },
+          competitions: [
+            {
+              status: { type: { state: "pre" } },
+              competitors: [
+                { homeAway: "away", team: { id: "2", abbreviation: "BOS" } },
+              ],
+            },
+          ],
+        },
+        {
+          id: "good",
+          date: "2026-04-02T02:30Z",
+          seasonType: { type: 2 },
+          competitions: [
+            {
+              status: { type: { state: "pre" } },
+              competitors: [
+                { homeAway: "home", team: { id: "13", abbreviation: "LAL" } },
+                { homeAway: "away", team: { id: "2", abbreviation: "BOS" } },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    const adapter = createEspnAdapter(config);
+    const games = await adapter.fetchSchedule("13");
+    expect(games.map((g) => g.id)).toEqual(["good"]);
+  });
+
   it("fetchSchedule fans out across competitions, tags badges, merges by date, and drops empties", async () => {
     const eplConfig: LeagueConfig = {
       id: "epl",

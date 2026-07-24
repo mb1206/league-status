@@ -221,6 +221,35 @@ describe("mapGame", () => {
     expect(mapGame(finalEvent, "13").competition).toBeUndefined();
   });
 
+  it("returns undefined for a malformed event missing the home competitor, without affecting valid events", () => {
+    const malformed: EspnEvent = {
+      id: "666",
+      date: "2026-05-01T02:30Z",
+      seasonType: { type: 2 },
+      competitions: [
+        {
+          status: { type: { state: "pre" } },
+          competitors: [
+            { homeAway: "away", team: { id: "2", abbreviation: "BOS" } },
+          ],
+        },
+      ],
+    };
+    expect(mapGame(malformed, "13")).toBeUndefined();
+    // A well-formed event is unaffected.
+    expect(mapGame(finalEvent, "13")).toMatchObject({ id: "401", isHome: true });
+  });
+
+  it("returns undefined for an event with no competitions", () => {
+    const noComp: EspnEvent = {
+      id: "777",
+      date: "2026-05-02T02:30Z",
+      seasonType: { type: 2 },
+      competitions: [],
+    };
+    expect(mapGame(noComp, "13")).toBeUndefined();
+  });
+
   it("has no result for a scheduled game", () => {
     const scheduled: EspnEvent = {
       id: "500",
