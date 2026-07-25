@@ -81,8 +81,10 @@ export function GameList({
               )}
               {g.result && <span className={`game-result result-${g.result}`}>{g.result}</span>}
               <span className="game-score">{scoreText(g)}</span>
-              <span className="game-date">{dateText(g.date, showTime)}</span>
-              {team && <LinkIcons className="game-links" links={gameLinks(team, g)} />}
+              <span className="game-meta">
+                <span className="game-date">{dateText(g.date, showTime)}</span>
+                {team && <LinkIcons className="game-links" links={gameLinks(team, g)} />}
+              </span>
             </li>
           ))}
         </ul>

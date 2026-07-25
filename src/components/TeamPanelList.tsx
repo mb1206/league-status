@@ -1,6 +1,7 @@
 import { TeamPanel } from "./TeamPanel";
 import type { FollowedTeam } from "../hooks/useFollowedTeams";
 import { byInSeasonFirst } from "../hooks/useInSeasonLeagues";
+import { leagueRank } from "../leagues/registry";
 
 interface TeamPanelListProps {
   teams: FollowedTeam[];
@@ -24,10 +25,12 @@ export function TeamPanelList({
     activeLeague !== null && teams.some((t) => t.leagueId === activeLeague)
       ? teams.filter((t) => t.leagueId === activeLeague)
       : teams;
-  // Float in-season teams to the top (stable). Only visible when unfiltered, since
-  // a single-league filter leaves every panel with the same in-season state.
+  // Float in-season teams to the top, then group by sport (registry order) so a
+  // team lands next to its league-mates no matter when it was added. Sort is
+  // stable, so same-league teams keep their relative (add) order.
+  const bySeason = byInSeasonFirst<FollowedTeam>(inSeasonLeagues, (t) => t.leagueId);
   const ordered = [...visible].sort(
-    byInSeasonFirst(inSeasonLeagues, (t) => t.leagueId),
+    (a, b) => bySeason(a, b) || leagueRank(a.leagueId) - leagueRank(b.leagueId),
   );
   return (
     <div className="team-panel-list">

@@ -56,24 +56,26 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               currentTeamId={query.data.team.id}
               seasonStatus={query.data.seasonStatus}
               standing={query.data.standing}
-            />
-            <LinkIcons
-              className="team-links"
-              links={[
-                {
-                  kind: "espn",
-                  href: espnTeamUrl(query.data.team, query.data.league),
-                  label: `${query.data.team.name} on ESPN`,
-                },
-                {
-                  kind: "youtube",
-                  href: youtubeTeamHighlightsUrl(
-                    query.data.team,
-                    seasonYear(query.data.pastGames, new Date()),
-                  ),
-                  label: `${query.data.team.name} season highlights on YouTube`,
-                },
-              ] satisfies LinkChip[]}
+              links={
+                <LinkIcons
+                  className="team-links"
+                  links={[
+                    {
+                      kind: "espn",
+                      href: espnTeamUrl(query.data.team, query.data.league),
+                      label: `${query.data.team.name} on ESPN`,
+                    },
+                    {
+                      kind: "youtube",
+                      href: youtubeTeamHighlightsUrl(
+                        query.data.team,
+                        seasonYear(query.data.pastGames, new Date()),
+                      ),
+                      label: `${query.data.team.name} season highlights on YouTube`,
+                    },
+                  ] satisfies LinkChip[]}
+                />
+              }
             />
             <button
               className="panel-remove"

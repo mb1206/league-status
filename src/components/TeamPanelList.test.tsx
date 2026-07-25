@@ -66,6 +66,29 @@ describe("TeamPanelList", () => {
     expect(order).toEqual(["Liberty", "Titans"]);
   });
 
+  it("groups same-season teams by sport regardless of add order", () => {
+    const { container } = render(
+      <TeamPanelList
+        teams={[
+          { leagueId: "wnba", teamId: "Storm" },
+          { leagueId: "nba", teamId: "Lakers" },
+          { leagueId: "wnba", teamId: "Liberty" },
+        ]}
+        inSeasonLeagues={new Set(["wnba", "nba"])}
+        activeLeague={null}
+        onRemove={() => {}}
+      />,
+    );
+    const order = [...container.querySelectorAll(".team-panel")].map((p) => {
+      const t = p.textContent ?? "";
+      if (t.includes("Lakers")) return "Lakers";
+      if (t.includes("Storm")) return "Storm";
+      return "Liberty";
+    });
+    // nba (registry rank 0) before wnba (rank 1); within wnba, add order preserved.
+    expect(order).toEqual(["Lakers", "Storm", "Liberty"]);
+  });
+
   it("ignores a stale filter for a league no longer followed", () => {
     render(
       <TeamPanelList
