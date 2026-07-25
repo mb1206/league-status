@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { GameList } from "./GameList";
-import type { Game } from "../domain/types";
+import type { Game, Team } from "../domain/types";
 
 const past: Game = {
   id: "1",
@@ -66,5 +66,20 @@ describe("GameList", () => {
   it("omits the badge when the game has no competition", () => {
     render(<GameList title="Upcoming" games={[upcoming]} />);
     expect(screen.queryByText("UCL")).toBeNull();
+  });
+
+  const lakers: Team = { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL" };
+
+  it("renders per-game YouTube and Reddit links when a team is passed", () => {
+    render(<GameList title="Past" games={[past]} team={lakers} />);
+    const yt = screen.getByRole("link", { name: /highlights on YouTube/i });
+    expect(yt).toHaveAttribute("href", expect.stringContaining("youtube.com"));
+    const reddit = screen.getByRole("link", { name: /on Reddit/i });
+    expect(reddit).toHaveAttribute("href", expect.stringContaining("reddit.com"));
+  });
+
+  it("renders no per-game links when no team is passed", () => {
+    render(<GameList title="Past" games={[past]} />);
+    expect(screen.queryByRole("link")).toBeNull();
   });
 });

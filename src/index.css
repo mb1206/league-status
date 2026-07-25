@@ -138,6 +138,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .game-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
 .game-comp { justify-self: start; color: var(--muted); background: var(--line); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
 .game-date { color: var(--muted); grid-column: 1 / -1; font-size: 12px; }
+.game-links { grid-column: 1 / -1; justify-self: end; margin-top: 2px; }
 .result-W { color: var(--win); font-weight: 700; }
 .result-L { color: var(--loss); font-weight: 700; }
 .game-list-empty { color: var(--muted); font-size: 14px; }

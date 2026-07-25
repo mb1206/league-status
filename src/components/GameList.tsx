@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
-import type { Game } from "../domain/types";
+import type { Game, Team } from "../domain/types";
+import { LinkIcons } from "./LinkIcons";
+import type { LinkChip } from "./LinkIcons";
+import { redditGameUrl, youtubeGameHighlightsUrl } from "../leagues/externalLinks";
 
 interface GameListProps {
   title: string;
@@ -7,11 +10,28 @@ interface GameListProps {
   showTime?: boolean;
   twoColumn?: boolean;
   action?: ReactNode;
+  team?: Team;
 }
 
 function opponent(g: Game): string {
   const opp = g.isHome ? g.awayTeam : g.homeTeam;
   return `${g.isHome ? "vs" : "@"} ${opp.abbreviation}`;
+}
+
+function gameLinks(team: Team, g: Game): LinkChip[] {
+  const oppAbbr = g.isHome ? g.awayTeam.abbreviation : g.homeTeam.abbreviation;
+  return [
+    {
+      kind: "youtube",
+      href: youtubeGameHighlightsUrl(team, g),
+      label: `${team.name} vs ${oppAbbr} highlights on YouTube`,
+    },
+    {
+      kind: "reddit",
+      href: redditGameUrl(team, g),
+      label: `${team.name} vs ${oppAbbr} on Reddit`,
+    },
+  ];
 }
 
 function scoreText(g: Game): string {
@@ -39,6 +59,7 @@ export function GameList({
   showTime = false,
   twoColumn = false,
   action,
+  team,
 }: GameListProps) {
   return (
     <div className="game-list">
@@ -61,6 +82,7 @@ export function GameList({
               {g.result && <span className={`game-result result-${g.result}`}>{g.result}</span>}
               <span className="game-score">{scoreText(g)}</span>
               <span className="game-date">{dateText(g.date, showTime)}</span>
+              {team && <LinkIcons className="game-links" links={gameLinks(team, g)} />}
             </li>
           ))}
         </ul>
