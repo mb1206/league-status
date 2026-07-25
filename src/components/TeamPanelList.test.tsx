@@ -89,6 +89,25 @@ describe("TeamPanelList", () => {
     expect(order).toEqual(["Lakers", "Storm", "Liberty"]);
   });
 
+  it("renders one sport header per league group", () => {
+    const { container } = render(
+      <TeamPanelList
+        teams={[
+          { leagueId: "nba", teamId: "Lakers" },
+          { leagueId: "wnba", teamId: "Storm" },
+          { leagueId: "wnba", teamId: "Liberty" },
+        ]}
+        inSeasonLeagues={new Set(["nba", "wnba"])}
+        activeLeague={null}
+        onRemove={() => {}}
+      />,
+    );
+    const headers = [...container.querySelectorAll(".team-group-header")].map(
+      (h) => h.textContent?.trim(),
+    );
+    expect(headers).toEqual(["🏀 NBA", "🏀 WNBA"]); // one per group, not per team
+  });
+
   it("ignores a stale filter for a league no longer followed", () => {
     render(
       <TeamPanelList

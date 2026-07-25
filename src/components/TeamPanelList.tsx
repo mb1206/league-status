@@ -1,7 +1,8 @@
+import { Fragment } from "react";
 import { TeamPanel } from "./TeamPanel";
 import type { FollowedTeam } from "../hooks/useFollowedTeams";
 import { byInSeasonFirst } from "../hooks/useInSeasonLeagues";
-import { leagueRank } from "../leagues/registry";
+import { getLeagueModule, leagueRank } from "../leagues/registry";
 
 interface TeamPanelListProps {
   teams: FollowedTeam[];
@@ -34,9 +35,20 @@ export function TeamPanelList({
   );
   return (
     <div className="team-panel-list">
-      {ordered.map((t) => (
-        <TeamPanel key={`${t.leagueId}:${t.teamId}`} team={t} onRemove={onRemove} />
-      ))}
+      {ordered.map((t, i) => {
+        const startsGroup = i === 0 || ordered[i - 1].leagueId !== t.leagueId;
+        const config = getLeagueModule(t.leagueId).config;
+        return (
+          <Fragment key={`${t.leagueId}:${t.teamId}`}>
+            {startsGroup && (
+              <h3 className="team-group-header">
+                <span aria-hidden>{config.icon}</span> {config.displayName}
+              </h3>
+            )}
+            <TeamPanel team={t} onRemove={onRemove} />
+          </Fragment>
+        );
+      })}
     </div>
   );
 }
