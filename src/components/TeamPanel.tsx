@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Banner } from "./Banner";
 import { GameList } from "./GameList";
+import { LinkIcons } from "./LinkIcons";
+import type { LinkChip } from "./LinkIcons";
 import { useTeamStatus } from "../hooks/useTeamStatus";
 import { useLeagueStandings } from "../hooks/useLeagueStandings";
 import { selectGames } from "../leagues/baseDerivations";
 import { findDivision } from "../leagues/divisions";
+import { espnTeamUrl, seasonYear, youtubeTeamHighlightsUrl } from "../leagues/externalLinks";
 import type { FollowedTeam } from "../hooks/useFollowedTeams";
 
 const PAST_GAMES = 3;
@@ -54,6 +57,24 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               seasonStatus={query.data.seasonStatus}
               standing={query.data.standing}
             />
+            <LinkIcons
+              className="team-links"
+              links={[
+                {
+                  kind: "espn",
+                  href: espnTeamUrl(query.data.team, query.data.league),
+                  label: `${query.data.team.name} on ESPN`,
+                },
+                {
+                  kind: "youtube",
+                  href: youtubeTeamHighlightsUrl(
+                    query.data.team,
+                    seasonYear(query.data.pastGames, new Date()),
+                  ),
+                  label: `${query.data.team.name} season highlights on YouTube`,
+                },
+              ] satisfies LinkChip[]}
+            />
             <button
               className="panel-remove"
               aria-label={`Remove ${query.data.team.name}`}
@@ -65,6 +86,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
           <div className="panel-games">
             <GameList
               title="Past"
+              team={query.data.team}
               games={selectGames(query.data.pastGames, {
                 homeOnly,
                 limit: PAST_GAMES,
