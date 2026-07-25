@@ -1,0 +1,31 @@
+import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { LinkIcons } from "./LinkIcons";
+import type { LinkChip } from "./LinkIcons";
+
+const links: LinkChip[] = [
+  { kind: "espn", href: "https://espn.example/team", label: "Lakers on ESPN" },
+  { kind: "youtube", href: "https://yt.example/search", label: "Lakers highlights on YouTube" },
+];
+
+describe("LinkIcons", () => {
+  it("renders one link per chip with href, aria-label, target and rel", () => {
+    render(<LinkIcons links={links} />);
+    const espn = screen.getByRole("link", { name: "Lakers on ESPN" });
+    expect(espn).toHaveAttribute("href", "https://espn.example/team");
+    expect(espn).toHaveAttribute("target", "_blank");
+    expect(espn).toHaveAttribute("rel", "noreferrer");
+    expect(espn).toHaveAttribute("title", "Lakers on ESPN");
+    expect(screen.getByRole("link", { name: "Lakers highlights on YouTube" })).toBeInTheDocument();
+  });
+
+  it("renders nothing when there are no links", () => {
+    const { container } = render(<LinkIcons links={[]} />);
+    expect(container.querySelector(".link-icons")).toBeNull();
+  });
+
+  it("applies an extra className to the wrapper", () => {
+    const { container } = render(<LinkIcons links={links} className="game-links" />);
+    expect(container.querySelector(".link-icons.game-links")).not.toBeNull();
+  });
+});
