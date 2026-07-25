@@ -19,6 +19,21 @@ describe("LinkIcons", () => {
     expect(screen.getByRole("link", { name: "Lakers highlights on YouTube" })).toBeInTheDocument();
   });
 
+  it("renders the emoji glyph for each kind", () => {
+    render(
+      <LinkIcons
+        links={[
+          { kind: "espn", href: "#e", label: "ESPN" },
+          { kind: "youtube", href: "#y", label: "YouTube" },
+          { kind: "reddit", href: "#r", label: "Reddit" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "ESPN" })).toHaveTextContent("📊");
+    expect(screen.getByRole("link", { name: "YouTube" })).toHaveTextContent("🎬");
+    expect(screen.getByRole("link", { name: "Reddit" })).toHaveTextContent("💬");
+  });
+
   it("renders nothing when there are no links", () => {
     const { container } = render(<LinkIcons links={[]} />);
     expect(container.querySelector(".link-icons")).toBeNull();
