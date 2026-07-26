@@ -5,12 +5,15 @@ import { TeamPanelList } from "./components/TeamPanelList";
 import { AddTeamDialog } from "./components/AddTeamDialog";
 import { useFollowedTeams } from "./hooks/useFollowedTeams";
 import { useInSeasonLeagues } from "./hooks/useInSeasonLeagues";
+import { WeekBanner } from "./components/WeekBanner";
+import { useUpcomingWeek } from "./hooks/useUpcomingWeek";
 
 export default function App() {
   const { followed, add, remove } = useFollowedTeams();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [activeLeague, setActiveLeague] = useState<string | null>(null);
   const inSeasonLeagues = useInSeasonLeagues(followed);
+  const week = useUpcomingWeek(followed);
 
   return (
     <div className="app">
@@ -22,6 +25,9 @@ export default function App() {
         onSelect={setActiveLeague}
         onAddSport={() => setDialogOpen(true)}
       />
+      {followed.length > 0 && (
+        <WeekBanner groups={week} activeLeague={activeLeague} />
+      )}
       <main>
         <TeamPanelList
           teams={followed}
