@@ -28,7 +28,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
     standings.data && teamId ? findDivision(standings.data, teamId) : undefined;
 
   return (
-    <section className="team-panel">
+    <section className="team-panel" id={`team-${team.leagueId}-${team.teamId}`}>
       {query.isLoading && (
         <div className="panel-skeleton" data-testid="panel-skeleton">
           Loading team…

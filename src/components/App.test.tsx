@@ -7,6 +7,7 @@ import * as followed from "../hooks/useFollowedTeams";
 import * as statusHook from "../hooks/useTeamStatus";
 import * as standingsHook from "../hooks/useLeagueStandings";
 import * as inSeasonHook from "../hooks/useInSeasonLeagues";
+import * as weekHook from "../hooks/useUpcomingWeek";
 import type { TeamStatus } from "../domain/types";
 
 function renderApp() {
@@ -36,6 +37,7 @@ describe("App", () => {
       data: undefined,
     } as ReturnType<typeof standingsHook.useLeagueStandings>);
     vi.spyOn(inSeasonHook, "useInSeasonLeagues").mockReturnValue(new Set());
+    vi.spyOn(weekHook, "useUpcomingWeek").mockReturnValue([]);
   });
 
   it("shows an empty state when no teams are followed", () => {
@@ -102,5 +104,31 @@ describe("App", () => {
     renderApp();
     expect(screen.getByText(/couldn't load/i)).toBeInTheDocument();
     expect(screen.getByText("Celtics")).toBeInTheDocument();
+  });
+
+  it("renders the upcoming-week banner with a card linking to the team", () => {
+    vi.spyOn(followed, "useFollowedTeams").mockReturnValue({
+      followed: [{ leagueId: "nba", teamId: "13" }],
+      add: vi.fn(),
+      remove: vi.fn(),
+    });
+    vi.spyOn(statusHook, "useTeamStatus").mockReturnValue({
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      data: statusFor("Lakers"),
+    } as ReturnType<typeof statusHook.useTeamStatus>);
+    vi.spyOn(weekHook, "useUpcomingWeek").mockReturnValue([
+      {
+        key: "2026-07-25",
+        label: "TODAY",
+        games: [
+          { leagueId: "nba", teamId: "13", teamAbbr: "LAL", icon: "🏀", opponent: "vs GSW", date: "2026-07-25T23:30:00Z" },
+        ],
+      },
+    ]);
+
+    renderApp();
+    expect(screen.getByRole("link", { name: "LAL vs GSW" })).toHaveAttribute("href", "#team-nba-13");
   });
 });

@@ -154,4 +154,10 @@ describe("TeamPanel", () => {
     await userEvent.click(screen.getByRole("button", { name: /retry/i }));
     expect(refetch).toHaveBeenCalledOnce();
   });
+
+  it("gives the panel an anchor id for scroll targeting", () => {
+    mockStatus({ isLoading: false, isError: false, isSuccess: true, data: sample });
+    const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
+    expect(container.querySelector("#team-nba-13")).not.toBeNull();
+  });
 });
