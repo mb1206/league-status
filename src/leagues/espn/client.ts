@@ -13,6 +13,8 @@ export const espnUrls = {
   schedule: (p: EspnPath, teamId: string) =>
     `${BASE}/${p.sport}/${p.league}/teams/${teamId}/schedule`,
   teams: (p: EspnPath) => `${BASE}/${p.sport}/${p.league}/teams`,
+  scoreboard: (p: EspnPath, dates: string) =>
+    `${BASE}/${p.sport}/${p.league}/scoreboard?dates=${dates}`,
   standings: (p: EspnPath) =>
     `${CORE_BASE}/${p.sport}/${p.league}/standings?level=3`,
 };
@@ -58,6 +60,7 @@ export interface EspnEvent {
 
 export interface EspnScheduleResponse {
   events: EspnEvent[];
+  season?: { year: number };
 }
 
 export interface EspnStandingsEntry {
