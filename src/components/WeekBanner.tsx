@@ -42,7 +42,19 @@ export function WeekBanner({ groups, activeLeague = null }: WeekBannerProps) {
                     aria-label={`${game.teamAbbr} ${game.opponent}`}
                   >
                     <span className="week-card-team">
-                      <span aria-hidden>{game.icon}</span> {game.teamAbbr}
+                      {game.logoUrl ? (
+                        <img
+                          className="week-card-logo"
+                          src={game.logoUrl}
+                          alt=""
+                          aria-hidden
+                          width={18}
+                          height={18}
+                        />
+                      ) : (
+                        <span aria-hidden>{game.icon}</span>
+                      )}{" "}
+                      {game.teamAbbr}
                     </span>
                     <span className="week-card-opp">{game.opponent}</span>
                     <span className="week-card-time">{timeText(game.date)}</span>

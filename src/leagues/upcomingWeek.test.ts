@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildWeek, type WeekEntry } from "./upcomingWeek";
 import type { Game, LeagueConfig, Team } from "../domain/types";
 
-const lakers: Team = { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL" };
+const lakers: Team = { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL", logoUrl: "https://logos.example/lal.png" };
 const nba: LeagueConfig = { id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true };
 
 function game(over: Partial<Game> = {}): Game {
@@ -98,6 +98,7 @@ describe("buildWeek", () => {
     expect(wg.leagueId).toBe("nba");
     expect(wg.teamId).toBe("13");
     expect(wg.teamAbbr).toBe("LAL");
+    expect(wg.logoUrl).toBe("https://logos.example/lal.png");
     expect(wg.icon).toBe("🏀");
   });
 });

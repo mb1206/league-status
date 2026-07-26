@@ -4,6 +4,7 @@ export interface WeekGame {
   leagueId: string;
   teamId: string;
   teamAbbr: string;
+  logoUrl?: string; // team logo; falls back to the league icon when absent
   icon: string;
   opponent: string; // "vs GSW" or "@ MIN"
   date: string; // ISO
@@ -57,6 +58,7 @@ export function buildWeek(entries: WeekEntry[], now: Date): DayGroup[] {
         leagueId: entry.team.leagueId,
         teamId: entry.team.id,
         teamAbbr: entry.team.abbreviation,
+        logoUrl: entry.team.logoUrl,
         icon: entry.league.icon,
         opponent: g.isHome
           ? `vs ${g.awayTeam.abbreviation}`
