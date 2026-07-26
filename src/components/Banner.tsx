@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { DivisionStanding, SeasonStatus, Standing } from "../domain/types";
 
 interface BannerProps {
@@ -10,6 +11,7 @@ interface BannerProps {
   currentTeamId?: string;
   seasonStatus: SeasonStatus;
   standing: Standing;
+  links?: ReactNode; // rendered inline just after the season status
 }
 
 function endDateText(iso: string): string {
@@ -30,6 +32,7 @@ export function Banner({
   currentTeamId,
   seasonStatus,
   standing,
+  links,
 }: BannerProps) {
   const standingText = standing.summary ?? "";
   const endLabel = hasPlayoffs ? "Playoffs start" : "Season ends";
@@ -57,6 +60,7 @@ export function Banner({
           </span>
         )}
       </span>
+      {links}
       <span className="banner-standing">
         {standingText &&
           (division ? (

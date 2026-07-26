@@ -112,6 +112,40 @@ describe("TeamPanel", () => {
     expect(lists[1].querySelectorAll(".game-row")).toHaveLength(6); // Upcoming
   });
 
+  it("renders ESPN and YouTube season links in the header", () => {
+    mockStatus({ isLoading: false, isError: false, isSuccess: true, data: sample });
+    render(<TeamPanel team={team} onRemove={() => {}} />);
+    expect(
+      screen.getByRole("link", { name: /Los Angeles Lakers on ESPN/i }),
+    ).toHaveAttribute("href", "https://www.espn.com/nba/team/_/id/13");
+    expect(
+      screen.getByRole("link", { name: /season highlights on YouTube/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders per-game links in Past but not Upcoming", () => {
+    const g = (id: string): TeamStatus["pastGames"][number] => ({
+      id,
+      date: "2026-04-01T02:30:00Z",
+      status: "final",
+      seasonType: "regular",
+      isHome: true,
+      result: "W",
+      homeTeam: { id: "13", abbreviation: "LAL", score: 110 },
+      awayTeam: { id: "2", abbreviation: "BOS", score: 100 },
+    });
+    mockStatus({
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+      data: { ...sample, pastGames: [g("p1")], upcomingGames: [{ ...g("u1"), status: "scheduled", result: undefined }] },
+    });
+    const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
+    const lists = container.querySelectorAll(".panel-games .game-list");
+    expect(lists[0].querySelectorAll(".game-links")).toHaveLength(1); // Past
+    expect(lists[1].querySelectorAll(".game-links")).toHaveLength(0); // Upcoming
+  });
+
   it("shows an error card with a working Retry button", async () => {
     const refetch = vi.fn();
     mockStatus({ isLoading: false, isError: true, error: new Error("boom"), refetch });

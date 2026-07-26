@@ -32,6 +32,12 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .sport-chip.empty { border-style: dotted; color: var(--muted); opacity: 0.55; }
 .sport-chip.empty:hover { opacity: 0.85; }
 .team-panel-list { display: flex; flex-direction: column; gap: 16px; margin-top: 16px; }
+.team-group-header {
+  display: flex; align-items: center; gap: 8px; margin: 8px 4px -4px;
+  color: var(--muted); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.team-group-header:first-child { margin-top: 0; }
 /* No overflow:hidden here — it would clip the division popover when a panel is
    short. The banner rounds its own top corners so phase gradients stay inside. */
 .team-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
@@ -43,6 +49,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   position: absolute; top: 8px; right: 10px; background: none; border: none;
   color: var(--muted); font-size: 20px; cursor: pointer;
 }
+.banner .team-links { align-self: center; }
 .banner {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
   /* extra right padding reserves space for the absolutely-positioned remove (×) button */
@@ -135,12 +142,21 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   column-gap: 24px;
 }
 @media (max-width: 560px) { .game-list ul.two-column { grid-template-columns: 1fr; grid-auto-flow: row; } }
-.game-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
-.game-comp { justify-self: start; color: var(--muted); background: var(--line); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
-.game-date { color: var(--muted); grid-column: 1 / -1; font-size: 12px; }
+/* Row 1 is a flex line (opponent grows, pushing result + score flush right);
+   game-meta wraps to its own full-width line so the date sits left and the
+   link chips align right, directly under the score. */
+.game-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.game-opp { flex: 1; }
+.game-comp { color: var(--muted); background: var(--line); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; white-space: nowrap; }
+.game-meta { flex-basis: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 20px; }
+.game-date { color: var(--muted); font-size: 12px; }
 .result-W { color: var(--win); font-weight: 700; }
 .result-L { color: var(--loss); font-weight: 700; }
 .game-list-empty { color: var(--muted); font-size: 14px; }
+.link-icons { display: inline-flex; align-items: center; gap: 4px; }
+.link-chip { display: inline-flex; line-height: 1; font-size: 15px; text-decoration: none; transition: transform 0.1s ease; }
+.link-chip:hover { transform: translateY(-2px); }
+.link-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 .dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding-top: 10vh; }
 .dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
 .dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }

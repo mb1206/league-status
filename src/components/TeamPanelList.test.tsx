@@ -66,6 +66,48 @@ describe("TeamPanelList", () => {
     expect(order).toEqual(["Liberty", "Titans"]);
   });
 
+  it("groups same-season teams by sport regardless of add order", () => {
+    const { container } = render(
+      <TeamPanelList
+        teams={[
+          { leagueId: "wnba", teamId: "Storm" },
+          { leagueId: "nba", teamId: "Lakers" },
+          { leagueId: "wnba", teamId: "Liberty" },
+        ]}
+        inSeasonLeagues={new Set(["wnba", "nba"])}
+        activeLeague={null}
+        onRemove={() => {}}
+      />,
+    );
+    const order = [...container.querySelectorAll(".team-panel")].map((p) => {
+      const t = p.textContent ?? "";
+      if (t.includes("Lakers")) return "Lakers";
+      if (t.includes("Storm")) return "Storm";
+      return "Liberty";
+    });
+    // nba (registry rank 0) before wnba (rank 1); within wnba, add order preserved.
+    expect(order).toEqual(["Lakers", "Storm", "Liberty"]);
+  });
+
+  it("renders one sport header per league group", () => {
+    const { container } = render(
+      <TeamPanelList
+        teams={[
+          { leagueId: "nba", teamId: "Lakers" },
+          { leagueId: "wnba", teamId: "Storm" },
+          { leagueId: "wnba", teamId: "Liberty" },
+        ]}
+        inSeasonLeagues={new Set(["nba", "wnba"])}
+        activeLeague={null}
+        onRemove={() => {}}
+      />,
+    );
+    const headers = [...container.querySelectorAll(".team-group-header")].map(
+      (h) => h.textContent?.trim(),
+    );
+    expect(headers).toEqual(["🏀 NBA", "🏀 WNBA"]); // one per group, not per team
+  });
+
   it("ignores a stale filter for a league no longer followed", () => {
     render(
       <TeamPanelList

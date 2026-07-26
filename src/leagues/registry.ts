@@ -95,6 +95,16 @@ export const LEAGUES: Record<string, LeagueModule> = {
   epl: premierLeagueModule,
 };
 
+// Canonical sport ordering (matches the registry declaration order, which the
+// sport filter bar also uses). Followed teams are grouped by this so all of a
+// sport's teams stay together regardless of the order they were added.
+const LEAGUE_ORDER = Object.keys(LEAGUES);
+
+export function leagueRank(leagueId: string): number {
+  const i = LEAGUE_ORDER.indexOf(leagueId);
+  return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+}
+
 export function getLeagueModule(leagueId: string): LeagueModule {
   const mod = LEAGUES[leagueId];
   if (!mod) throw new Error(`Unknown league: ${leagueId}`);
