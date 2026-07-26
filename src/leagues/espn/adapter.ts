@@ -1,14 +1,62 @@
-import type { Game, LeagueConfig } from "../../domain/types";
+import type { Competition, Game, LeagueConfig } from "../../domain/types";
 import type { LeagueAdapter } from "../types";
 import {
   espnUrls,
   fetchJson,
+  type EspnEvent,
+  type EspnPath,
   type EspnScheduleResponse,
   type EspnStandingsResponse,
   type EspnTeamResponse,
 } from "./client";
 import { mapGame, mapStanding, mapStandings, mapTeam } from "./mappers";
 import { TEAMS_BY_LEAGUE } from "../teamsData";
+import {
+  currentSoccerSeasonYear,
+  monthlyChunks,
+  seasonWindow,
+} from "./seasonWindow";
+
+function eventHasTeam(event: EspnEvent, teamId: string): boolean {
+  return (
+    event.competitions[0]?.competitors.some((c) => c.team.id === teamId) ?? false
+  );
+}
+
+// Season-start gap: ESPN's team-schedule endpoint returns no events for a
+// not-yet-underway soccer season even though fixtures exist. Backfill from the
+// league scoreboard across the season window (monthly chunks; the endpoint caps
+// at 100 events/response), keep only the followed team's fixtures, and tag them
+// with the primary competition. Self-heals once ESPN populates the schedule.
+async function fetchScoreboardGames(
+  path: EspnPath,
+  teamId: string,
+  competition: Competition,
+  seasonYear: number | undefined,
+): Promise<Game[]> {
+  const year = seasonYear ?? currentSoccerSeasonYear(new Date());
+  const { start, end } = seasonWindow(year);
+  const chunks = monthlyChunks(start, end);
+  const perChunk = await Promise.all(
+    chunks.map(async (c) => {
+      try {
+        const res = await fetchJson<EspnScheduleResponse>(
+          espnUrls.scoreboard(path, `${c.start}-${c.end}`),
+        );
+        return res.events ?? [];
+      } catch {
+        return [];
+      }
+    }),
+  );
+  const byId = new Map<string, EspnEvent>();
+  for (const e of perChunk.flat()) {
+    if (!byId.has(e.id) && eventHasTeam(e, teamId)) byId.set(e.id, e);
+  }
+  return [...byId.values()]
+    .map((e) => mapGame(e, teamId, competition))
+    .filter((g): g is Game => g !== undefined);
+}
 
 export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
   return {
@@ -42,7 +90,16 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
                 teamId,
               ),
             );
-            return (res.events ?? [])
+            const events = res.events ?? [];
+            if (events.length === 0 && competition.primary) {
+              return await fetchScoreboardGames(
+                { sport: config.sport, league: competition.slug },
+                teamId,
+                competition,
+                res.season?.year,
+              );
+            }
+            return events
               .map((e) => mapGame(e, teamId, competition))
               .filter((g): g is Game => g !== undefined);
           } catch {
