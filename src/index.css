@@ -87,6 +87,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
    group on an ancestor of the division popover would trap its z-index and let the
    Home-only toggle paint on top of it. */
 .banner[data-phase="offseason"] .banner-team,
+.banner[data-phase="offseason"] .banner-sep,
 .banner[data-phase="offseason"] .banner-status { opacity: 0.7; }
 .banner-team { font-weight: 700; font-size: 18px; }
 .banner-logo { vertical-align: middle; object-fit: contain; border-radius: 4px; }
@@ -187,6 +188,15 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
 .dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
 
+.confirm-dialog { width: 360px; }
+.confirm-message { margin: 4px 0 18px; font-size: 15px; line-height: 1.4; }
+.confirm-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.confirm-actions button { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); font-size: 13px; font-weight: 600; cursor: pointer; }
+.confirm-cancel { background: none; color: var(--text); }
+.confirm-cancel:hover { background: var(--line); }
+.confirm-remove { background: var(--loss); border-color: var(--loss); color: #fff; }
+.confirm-remove:hover { filter: brightness(1.08); }
+
 .season-games-dialog { width: 480px; padding-left: 18px; }
 .season-games-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .season-games-heading { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
@@ -195,7 +205,13 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .season-games-tab { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 5px 16px; border-radius: 999px; cursor: pointer; }
 .season-games-tab.active { background: var(--line); color: var(--text); }
 .season-games-tab:hover:not(.active) { color: var(--text); }
-.season-games-body { max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 20px; }
+.season-games-body { max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 10px; scrollbar-gutter: stable; }
+/* Persistent (non-overlay) scrollbar so toggling Past/Upcoming doesn't flash the
+   OS overlay bar, and it never expands over the row icons. */
+.season-games-body::-webkit-scrollbar { width: 10px; }
+.season-games-body::-webkit-scrollbar-track { background: transparent; }
+.season-games-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 999px; border: 3px solid transparent; background-clip: padding-box; }
+.season-games-body::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: padding-box; }
 .dialog-close { background: none; border: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .dialog-close:hover { color: var(--text); }
 .view-all { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; }

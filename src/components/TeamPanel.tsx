@@ -3,6 +3,7 @@ import { Banner } from "./Banner";
 import { GameList } from "./GameList";
 import { LinkIcons } from "./LinkIcons";
 import { SeasonGamesModal } from "./SeasonGamesModal";
+import { ConfirmDialog } from "./ConfirmDialog";
 import type { LinkChip } from "./LinkIcons";
 import { useTeamStatus } from "../hooks/useTeamStatus";
 import { useLeagueStandings } from "../hooks/useLeagueStandings";
@@ -24,6 +25,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
   const standings = useLeagueStandings(team.leagueId);
   const [homeOnly, setHomeOnly] = useState(false);
   const [showAll, setShowAll] = useState(false);
+  const [confirmRemove, setConfirmRemove] = useState(false);
 
   const teamId = query.data?.team.id;
   const division =
@@ -81,7 +83,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
             <button
               className="panel-remove"
               aria-label={`Remove ${query.data.team.name}`}
-              onClick={() => onRemove(team)}
+              onClick={() => setConfirmRemove(true)}
             >
               ×
             </button>
@@ -130,6 +132,16 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               pastGames={query.data.pastGames}
               upcomingGames={query.data.upcomingGames}
               onClose={() => setShowAll(false)}
+            />
+          )}
+          {confirmRemove && (
+            <ConfirmDialog
+              message={`Are you sure you want to remove ${query.data.team.name} from your roster?`}
+              onConfirm={() => {
+                setConfirmRemove(false);
+                onRemove(team);
+              }}
+              onCancel={() => setConfirmRemove(false)}
             />
           )}
         </>

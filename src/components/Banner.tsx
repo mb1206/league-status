@@ -43,8 +43,8 @@ export function Banner({
           <span aria-hidden>{icon}</span>
         )}{" "}
         {teamName}
-        <span className="banner-sep" aria-hidden> ·</span>
       </span>
+      <span className="banner-sep" aria-hidden>·</span>
       <span className="banner-status">
         {seasonStatus.label}
         {seasonStatus.progress && (
