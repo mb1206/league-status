@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Banner } from "./Banner";
 import { GameList } from "./GameList";
 import { LinkIcons } from "./LinkIcons";
+import { SeasonGamesModal } from "./SeasonGamesModal";
 import type { LinkChip } from "./LinkIcons";
 import { useTeamStatus } from "../hooks/useTeamStatus";
 import { useLeagueStandings } from "../hooks/useLeagueStandings";
@@ -22,6 +23,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
   const query = useTeamStatus(team);
   const standings = useLeagueStandings(team.leagueId);
   const [homeOnly, setHomeOnly] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const teamId = query.data?.team.id;
   const division =
@@ -93,6 +95,11 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
                 homeOnly,
                 limit: PAST_GAMES,
               })}
+              action={
+                <button className="view-all" onClick={() => setShowAll(true)}>
+                  View all
+                </button>
+              }
             />
             <div className="panel-divider" aria-hidden />
             <GameList
@@ -118,6 +125,14 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               }
             />
           </div>
+          {showAll && (
+            <SeasonGamesModal
+              team={query.data.team}
+              pastGames={query.data.pastGames}
+              upcomingGames={query.data.upcomingGames}
+              onClose={() => setShowAll(false)}
+            />
+          )}
         </>
       )}
     </section>

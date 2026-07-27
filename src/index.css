@@ -186,6 +186,15 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .dialog-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: flex-start; justify-content: center; padding-top: 10vh; }
 .dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
 .dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+
+.season-games-dialog { width: 560px; }
+.season-games-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.season-games-heading { margin: 0; font-size: 16px; }
+.season-games-body { max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.dialog-close { background: none; border: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
+.dialog-close:hover { color: var(--text); }
+.view-all { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; }
+.view-all:hover { text-decoration: underline; }
 .search-results { list-style: none; margin: 12px 0; padding: 0 8px 0 0; max-height: 300px; overflow-y: auto; scrollbar-gutter: stable; }
 .search-results button { width: 100%; text-align: left; background: none; border: none; color: var(--text); padding: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 6px; }
 .search-results button:hover { background: var(--line); }

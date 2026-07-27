@@ -160,4 +160,14 @@ describe("TeamPanel", () => {
     const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
     expect(container.querySelector("#team-nba-13")).not.toBeNull();
   });
+
+  it("opens the all-games modal when View all is clicked", async () => {
+    mockStatus({ isLoading: false, isError: false, isSuccess: true, data: sample });
+    render(<TeamPanel team={team} onRemove={() => {}} />);
+    const user = userEvent.setup();
+
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await user.click(screen.getByRole("button", { name: /view all/i }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
 });
