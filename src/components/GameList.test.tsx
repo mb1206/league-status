@@ -82,4 +82,15 @@ describe("GameList", () => {
     render(<GameList title="Past" games={[past]} />);
     expect(screen.queryByRole("link")).toBeNull();
   });
+
+  it("links an upcoming (not-yet-played) game to a YouTube preview, not highlights", () => {
+    render(<GameList title="Upcoming" games={[upcoming]} team={lakers} />);
+    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
+  });
+
+  it("omits the header when no title or action is given", () => {
+    const { container } = render(<GameList games={[past]} />);
+    expect(container.querySelector(".game-list-header")).toBeNull();
+  });
 });

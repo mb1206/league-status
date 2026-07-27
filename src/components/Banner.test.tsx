@@ -7,7 +7,6 @@ describe("Banner", () => {
     render(
       <Banner
         icon="🏀"
-        leagueName="NBA"
         teamName="Los Angeles Lakers"
         seasonStatus={{ phase: "playoffs_upcoming", label: "PLAYOFFS IN 3 WEEKS", weeksUntilPlayoffs: 3 }}
         standing={{ overall: "53-29", summary: "1st in Pacific Division", divisionRank: 1, divisionName: "Pacific" }}
@@ -24,7 +23,6 @@ describe("Banner", () => {
       <Banner
         icon="🏀"
         logoUrl="https://a.espncdn.com/lakers.png"
-        leagueName="NBA"
         teamName="Los Angeles Lakers"
         seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
         standing={{ overall: "53-29" }}
@@ -40,7 +38,6 @@ describe("Banner", () => {
     const { container } = render(
       <Banner
         icon="🏀"
-        leagueName="NBA"
         teamName="Los Angeles Lakers"
         seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
         standing={{ overall: "53-29" }}
@@ -60,7 +57,6 @@ describe("Banner", () => {
     render(
       <Banner
         icon="🏀"
-        leagueName="WNBA"
         teamName="Seattle Storm"
         hasPlayoffs
         seasonStatus={progressStatus}
@@ -75,7 +71,6 @@ describe("Banner", () => {
     render(
       <Banner
         icon="🏀"
-        leagueName="TestLeague"
         teamName="Some Team"
         seasonStatus={progressStatus}
         standing={{ overall: "6-19" }}
@@ -88,7 +83,6 @@ describe("Banner", () => {
     render(
       <Banner
         icon="🏀"
-        leagueName="NBA"
         teamName="Lakers"
         seasonStatus={{ phase: "offseason", label: "OFF SEASON" }}
         standing={{ overall: "0-0" }}
@@ -109,7 +103,6 @@ describe("Banner", () => {
     const { container } = render(
       <Banner
         icon="🏀"
-        leagueName="WNBA"
         teamName="Seattle Storm"
         currentTeamId="14"
         division={division}
@@ -129,7 +122,6 @@ describe("Banner", () => {
     const { container } = render(
       <Banner
         icon="🏀"
-        leagueName="WNBA"
         teamName="Seattle Storm"
         seasonStatus={{ phase: "in_season", label: "IN SEASON" }}
         standing={{ overall: "6-19", summary: "8th in Western Conference Division" }}
@@ -143,7 +135,6 @@ describe("Banner", () => {
     const { container } = render(
       <Banner
         icon="🏀"
-        leagueName="NBA"
         teamName="Lakers"
         seasonStatus={{ phase: "offseason", label: "OFF SEASON" }}
         standing={{ overall: "0-0" }}

@@ -26,13 +26,23 @@ export function youtubeTeamHighlightsUrl(team: Team, year: number): string {
   return YOUTUBE + encodeURIComponent(`${team.name} ${year} highlights`);
 }
 
-export function youtubeGameHighlightsUrl(team: Team, game: Game): string {
+// Highlights for a game that has been played; a preview for one that hasn't.
+// Both encode "{team} vs {opp} {kind} {date}" as a YouTube search.
+function youtubeGameQueryUrl(team: Team, game: Game, kind: "highlights" | "preview"): string {
   const date = new Date(game.date).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
-  return YOUTUBE + encodeURIComponent(`${team.name} vs ${opponentAbbr(game)} highlights ${date}`);
+  return YOUTUBE + encodeURIComponent(`${team.name} vs ${opponentAbbr(game)} ${kind} ${date}`);
+}
+
+export function youtubeGameHighlightsUrl(team: Team, game: Game): string {
+  return youtubeGameQueryUrl(team, game, "highlights");
+}
+
+export function youtubeGamePreviewUrl(team: Team, game: Game): string {
+  return youtubeGameQueryUrl(team, game, "preview");
 }
 
 export function redditGameUrl(team: Team, game: Game): string {

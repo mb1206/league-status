@@ -198,6 +198,64 @@ describe("createEspnAdapter", () => {
     expect(games.map((g) => g.id)).toEqual(["pl1"]);
   });
 
+  it("backfills the primary competition from the scoreboard when its schedule is empty", async () => {
+    const eplConfig: LeagueConfig = {
+      id: "epl",
+      sport: "soccer",
+      league: "eng.1",
+      displayName: "Premier League",
+      icon: "⚽",
+      hasPlayoffs: false,
+      competitions: [
+        { slug: "eng.1", shortName: "PL", name: "Premier League", primary: true },
+      ],
+    };
+    mockFetchByUrl([
+      // Empty team-schedule but season year present → triggers fallback.
+      { match: "eng.1/teams/359/schedule", payload: { season: { year: 2026 }, events: [] } },
+      // Every monthly scoreboard chunk returns the same two events (matched by
+      // "scoreboard"): one involving team 359, one that does not.
+      {
+        match: "scoreboard",
+        payload: {
+          events: [
+            scheduleEvent("sb-mine", "2026-08-22T14:00Z", "359"),
+            scheduleEvent("sb-other", "2026-08-22T14:00Z", "888"),
+          ],
+        },
+      },
+    ]);
+    const adapter = createEspnAdapter(eplConfig);
+    const games = await adapter.fetchSchedule("359");
+
+    // Deduped across chunks (not 11×) and filtered to the followed team.
+    expect(games.map((g) => g.id)).toEqual(["sb-mine"]);
+    expect(games[0].competition?.shortName).toBe("PL");
+    expect(games[0].competition?.primary).toBe(true);
+  });
+
+  it("does not hit the scoreboard when the primary schedule has events", async () => {
+    const eplConfig: LeagueConfig = {
+      id: "epl",
+      sport: "soccer",
+      league: "eng.1",
+      displayName: "Premier League",
+      icon: "⚽",
+      hasPlayoffs: false,
+      competitions: [
+        { slug: "eng.1", shortName: "PL", name: "Premier League", primary: true },
+      ],
+    };
+    mockFetchByUrl([
+      { match: "schedule", payload: { events: [scheduleEvent("pl1", "2026-03-10T15:00Z", "359")] } },
+    ]);
+    const adapter = createEspnAdapter(eplConfig);
+    const games = await adapter.fetchSchedule("359");
+
+    expect(games.map((g) => g.id)).toEqual(["pl1"]);
+    expect(fetch).not.toHaveBeenCalledWith(expect.stringContaining("scoreboard"));
+  });
+
   it("fetchStandings maps the standings tree into division groups", async () => {
     mockFetchOnce({
       children: [

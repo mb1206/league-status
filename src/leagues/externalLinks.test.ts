@@ -4,6 +4,7 @@ import {
   redditGameUrl,
   seasonYear,
   youtubeGameHighlightsUrl,
+  youtubeGamePreviewUrl,
   youtubeTeamHighlightsUrl,
 } from "./externalLinks";
 import type { Game, LeagueConfig, Team } from "../domain/types";
@@ -62,6 +63,14 @@ describe("youtubeGameHighlightsUrl", () => {
   it("uses the home abbreviation as opponent for an away game", () => {
     const url = youtubeGameHighlightsUrl(lakers, game({ isHome: false, homeTeam: { id: "2", abbreviation: "GSW" }, awayTeam: { id: "13", abbreviation: "LAL" } }));
     expect(url).toContain(encodeURIComponent("Los Angeles Lakers vs GSW highlights"));
+  });
+});
+
+describe("youtubeGamePreviewUrl", () => {
+  it("encodes a preview query (not highlights) for an upcoming game", () => {
+    const url = youtubeGamePreviewUrl(lakers, game({ isHome: true, status: "scheduled" }));
+    expect(url).toContain(encodeURIComponent("Los Angeles Lakers vs BOS preview"));
+    expect(url).not.toContain("highlights");
   });
 });
 

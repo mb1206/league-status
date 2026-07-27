@@ -4,7 +4,6 @@ import type { DivisionStanding, SeasonStatus, Standing } from "../domain/types";
 interface BannerProps {
   icon: string;
   logoUrl?: string;
-  leagueName: string;
   teamName: string;
   hasPlayoffs?: boolean;
   division?: DivisionStanding;
@@ -25,7 +24,6 @@ function endDateText(iso: string): string {
 export function Banner({
   icon,
   logoUrl,
-  leagueName,
   teamName,
   hasPlayoffs = false,
   division,
@@ -45,8 +43,8 @@ export function Banner({
           <span aria-hidden>{icon}</span>
         )}{" "}
         {teamName}
-        <span className="banner-league"> · {leagueName}</span>
       </span>
+      <span className="banner-sep" aria-hidden>·</span>
       <span className="banner-status">
         {seasonStatus.label}
         {seasonStatus.progress && (

@@ -18,6 +18,12 @@ describe("espnUrls", () => {
       "https://site.api.espn.com/apis/v2/sports/basketball/nba/standings?level=3",
     );
   });
+
+  it("builds the scoreboard url with a dates range", () => {
+    expect(espnUrls.scoreboard({ sport: "soccer", league: "eng.1" }, "20260801-20260831")).toBe(
+      "https://site.api.espn.com/apis/site/v2/sports/soccer/eng.1/scoreboard?dates=20260801-20260831",
+    );
+  });
 });
 
 describe("fetchJson", () => {
