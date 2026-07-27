@@ -34,15 +34,27 @@ const past: Game[] = [
 ];
 
 describe("SeasonGamesModal", () => {
-  it("renders all upcoming and past games with per-game links", () => {
+  it("defaults to the Past tab and shows past games with a highlights link", () => {
     render(
       <SeasonGamesModal team={team} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
     );
-    expect(screen.getByText("Upcoming")).toBeInTheDocument();
-    expect(screen.getByText("Past")).toBeInTheDocument();
-    expect(screen.getByText(/EVE/)).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Past" })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText(/LIV/)).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /highlights on YouTube/i }).length).toBe(2);
+    expect(screen.queryByText(/EVE/)).toBeNull(); // upcoming hidden until toggled
+    expect(screen.getByRole("link", { name: /highlights on YouTube/i })).toBeInTheDocument();
+  });
+
+  it("switches to the Upcoming tab, showing upcoming games with a preview link", async () => {
+    render(
+      <SeasonGamesModal team={team} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
+    );
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("tab", { name: "Upcoming" }));
+
+    expect(screen.getByText(/EVE/)).toBeInTheDocument();
+    expect(screen.queryByText(/LIV/)).toBeNull();
+    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
   });
 
   it("closes on Escape, backdrop click, and the close button but not on inner click", async () => {

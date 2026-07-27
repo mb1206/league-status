@@ -2,10 +2,14 @@ import type { ReactNode } from "react";
 import type { Game, Team } from "../domain/types";
 import { LinkIcons } from "./LinkIcons";
 import type { LinkChip } from "./LinkIcons";
-import { redditGameUrl, youtubeGameHighlightsUrl } from "../leagues/externalLinks";
+import {
+  redditGameUrl,
+  youtubeGameHighlightsUrl,
+  youtubeGamePreviewUrl,
+} from "../leagues/externalLinks";
 
 interface GameListProps {
-  title: string;
+  title?: string;
   games: Game[];
   showTime?: boolean;
   twoColumn?: boolean;
@@ -20,11 +24,13 @@ function opponent(g: Game): string {
 
 function gameLinks(team: Team, g: Game): LinkChip[] {
   const oppAbbr = g.isHome ? g.awayTeam.abbreviation : g.homeTeam.abbreviation;
+  // A played game links to highlights; one not yet played links to a preview.
+  const played = g.status === "final";
   return [
     {
       kind: "youtube",
-      href: youtubeGameHighlightsUrl(team, g),
-      label: `${team.name} vs ${oppAbbr} highlights on YouTube`,
+      href: played ? youtubeGameHighlightsUrl(team, g) : youtubeGamePreviewUrl(team, g),
+      label: `${team.name} vs ${oppAbbr} ${played ? "highlights" : "preview"} on YouTube`,
     },
     {
       kind: "reddit",
@@ -63,10 +69,12 @@ export function GameList({
 }: GameListProps) {
   return (
     <div className="game-list">
-      <div className="game-list-header">
-        <h4 className="game-list-title">{title}</h4>
-        {action}
-      </div>
+      {(title || action) && (
+        <div className="game-list-header">
+          {title && <h4 className="game-list-title">{title}</h4>}
+          {action}
+        </div>
+      )}
       {games.length === 0 ? (
         <p className="game-list-empty">No games</p>
       ) : (

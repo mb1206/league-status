@@ -190,7 +190,11 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .season-games-dialog { width: 560px; }
 .season-games-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .season-games-heading { margin: 0; font-size: 16px; }
-.season-games-body { max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 12px; }
+.season-games-tabs { display: inline-flex; gap: 2px; margin-bottom: 14px; padding: 3px; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
+.season-games-tab { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 5px 16px; border-radius: 999px; cursor: pointer; }
+.season-games-tab.active { background: var(--line); color: var(--text); }
+.season-games-tab:hover:not(.active) { color: var(--text); }
+.season-games-body { max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 20px; }
 .dialog-close { background: none; border: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .dialog-close:hover { color: var(--text); }
 .view-all { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; }
