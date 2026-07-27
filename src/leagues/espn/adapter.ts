@@ -79,8 +79,10 @@ export function createEspnAdapter(config: LeagueConfig): LeagueAdapter {
       }
 
       // Multi-competition leagues (e.g. Premier League): fetch every competition's
-      // schedule in parallel, tag each fixture with its competition, and drop any
-      // competition that errors or returns no events. Merge and sort by date.
+      // schedule in parallel, tag each fixture with its competition, and merge/sort
+      // by date. A competition that errors or returns no events drops out — except
+      // the primary competition, which backfills from the scoreboard when its
+      // schedule is empty (see fetchScoreboardGames).
       const perCompetition = await Promise.all(
         config.competitions.map(async (competition) => {
           try {

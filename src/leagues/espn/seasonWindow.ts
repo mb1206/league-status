@@ -43,6 +43,9 @@ export function monthlyChunks(
   return chunks;
 }
 
+// Reasoned in UTC (consistent with seasonWindow/monthlyChunks). Only used as a
+// fallback when ESPN omits season.year, so the once-a-year Jun30/Jul1 boundary
+// where a local-time viewer might resolve a few hours early is immaterial.
 export function currentSoccerSeasonYear(now: Date): number {
   const y = now.getUTCFullYear();
   return now.getUTCMonth() >= 6 ? y : y - 1; // Jul(6)+ → this year, else prior
