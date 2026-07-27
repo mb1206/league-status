@@ -51,7 +51,6 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
             <Banner
               icon={query.data.league.icon}
               logoUrl={query.data.team.logoUrl}
-              leagueName={query.data.league.displayName}
               hasPlayoffs={query.data.league.hasPlayoffs}
               teamName={query.data.team.name}
               division={division}

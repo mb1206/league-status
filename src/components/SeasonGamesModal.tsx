@@ -40,6 +40,16 @@ export function SeasonGamesModal({
       >
         <div className="season-games-header">
           <h3 id={titleId} className="season-games-heading">
+            {team.logoUrl && (
+              <img
+                className="season-games-logo"
+                src={team.logoUrl}
+                alt=""
+                aria-hidden
+                width={22}
+                height={22}
+              />
+            )}
             {team.name} — all games
           </h3>
           <button className="dialog-close" aria-label="Close" onClick={onClose}>
