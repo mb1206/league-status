@@ -90,6 +90,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .banner[data-phase="offseason"] .banner-status { opacity: 0.7; }
 .banner-team { font-weight: 700; font-size: 18px; }
 .banner-logo { vertical-align: middle; object-fit: contain; border-radius: 4px; }
+.banner-sep { color: var(--muted); font-weight: 400; }
 .banner-status { font-weight: 700; letter-spacing: 0.05em; color: var(--accent); }
 .banner-progress { position: relative; cursor: default; }
 .season-tooltip {
@@ -186,7 +187,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .dialog { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; width: 400px; max-width: 90vw; }
 .dialog input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
 
-.season-games-dialog { width: 480px; }
+.season-games-dialog { width: 480px; padding-left: 18px; }
 .season-games-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .season-games-heading { margin: 0; font-size: 16px; display: flex; align-items: center; gap: 8px; }
 .season-games-logo { border-radius: 4px; }
@@ -194,7 +195,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 .season-games-tab { background: none; border: none; color: var(--muted); font-size: 13px; font-weight: 600; padding: 5px 16px; border-radius: 999px; cursor: pointer; }
 .season-games-tab.active { background: var(--line); color: var(--text); }
 .season-games-tab:hover:not(.active) { color: var(--text); }
-.season-games-body { max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 20px; }
+.season-games-body { max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 20px; }
 .dialog-close { background: none; border: none; color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer; padding: 0 4px; }
 .dialog-close:hover { color: var(--text); }
 .view-all { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; }
