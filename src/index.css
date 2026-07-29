@@ -215,3 +215,25 @@ button.link-chip { background: none; border: none; padding: 0; cursor: pointer; 
 .search-results button { width: 100%; text-align: left; background: none; border: none; color: var(--text); padding: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; border-radius: 6px; }
 .search-results button:hover { background: var(--line); }
 .result-league { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+.season-calendar-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.season-calendar-navbtn { background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 16px; line-height: 1; }
+.season-calendar-navbtn:disabled { opacity: 0.35; cursor: default; }
+.season-calendar-month { font-weight: 700; font-size: 15px; }
+.season-calendar-bulk { margin-left: auto; background: var(--panel); border: 1px solid var(--line); color: var(--text); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.season-calendar-bulk:hover { border-color: var(--accent); }
+.season-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.season-calendar-weekday { color: var(--muted); font-size: 11px; font-weight: 700; text-align: center; padding: 2px 0; }
+.season-calendar-day { min-height: 62px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
+.season-calendar-day.empty { border: none; }
+.season-calendar-day.today { border-color: var(--accent); }
+.season-calendar-daynum { color: var(--muted); font-size: 11px; }
+.season-calendar-chip { background: var(--line); border: none; color: var(--text); border-radius: 5px; padding: 2px 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: left; }
+.season-calendar-chip.past { opacity: 0.55; }
+.season-calendar-chip:hover { background: var(--accent); color: white; }
+.season-calendar-detail { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+.season-calendar-agenda { display: none; }
+@media (max-width: 560px) {
+  .season-calendar-grid, .season-calendar-detail { display: none; }
+  .season-calendar-agenda { display: block; }
+}
