@@ -65,7 +65,19 @@ export function SeasonGamesModal({
               aria-label="List view"
               onClick={() => setView("list")}
             >
-              ☰
+              <svg
+                className="season-games-view-icon"
+                viewBox="0 0 16 16"
+                width="15"
+                height="15"
+                aria-hidden="true"
+              >
+                <g fill="currentColor">
+                  <rect x="1" y="3" width="14" height="2" rx="1" />
+                  <rect x="1" y="7" width="14" height="2" rx="1" />
+                  <rect x="1" y="11" width="14" height="2" rx="1" />
+                </g>
+              </svg>
             </button>
             <button
               type="button"

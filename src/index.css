@@ -23,8 +23,10 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 }
 .app-header-actions { display: flex; align-items: center; gap: 8px; }
 .debug-teams-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
   background: var(--panel); color: var(--text); border: 1px solid var(--line);
-  padding: 7px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1;
+  border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1;
 }
 .empty-state { color: var(--muted); text-align: center; padding: 48px 0; }
 .sport-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
@@ -229,21 +231,19 @@ button.link-chip { background: none; border: none; padding: 0; cursor: pointer; 
 .season-calendar-bulk:hover { border-color: var(--accent); }
 .season-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .season-calendar-weekday { color: var(--muted); font-size: 11px; font-weight: 700; text-align: center; padding: 2px 0; }
-.season-calendar-day { min-height: 62px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
+.season-calendar-day { min-height: 78px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; display: flex; flex-direction: column; gap: 3px; }
 .season-calendar-day.empty { border: none; }
 .season-calendar-day.today { border-color: var(--accent); }
 .season-calendar-daynum { color: var(--muted); font-size: 11px; }
-.season-calendar-chip { background: var(--line); border: none; color: var(--text); border-radius: 5px; padding: 2px 4px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: left; }
-.season-calendar-chip.past { opacity: 0.55; }
-.season-calendar-chip:hover { background: var(--accent); color: white; }
-.season-calendar-detail { margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--line); }
-.season-calendar-agenda { display: none; }
-@media (max-width: 560px) {
-  .season-calendar-grid, .season-calendar-detail { display: none; }
-  .season-calendar-agenda { display: block; }
-}
+.season-calendar-game { background: var(--line); border-radius: 5px; padding: 3px 4px; display: flex; flex-direction: column; gap: 2px; }
+.season-calendar-game.past { opacity: 0.7; }
+.season-calendar-gameopp { font-size: 11px; font-weight: 600; }
+.season-calendar-gamescore { font-size: 11px; display: flex; align-items: baseline; gap: 4px; }
+.season-calendar-gamenums { color: var(--muted); }
+.season-calendar-gamelinks { display: flex; gap: 4px; margin-top: 1px; }
 
-.season-games-dialog.calendar { width: 640px; }
+.season-games-dialog.calendar { width: min(900px, 94vw); }
 .season-games-view-toggle { display: inline-flex; gap: 2px; margin-left: auto; padding: 3px; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
-.season-games-view-btn { background: none; border: none; color: var(--muted); font-size: 14px; padding: 3px 9px; border-radius: 999px; cursor: pointer; line-height: 1; }
+.season-games-view-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 24px; background: none; border: none; color: var(--muted); font-size: 14px; padding: 0 8px; border-radius: 999px; cursor: pointer; line-height: 1; }
 .season-games-view-btn.active { background: var(--line); color: var(--text); }
+.season-games-view-icon { display: block; }
