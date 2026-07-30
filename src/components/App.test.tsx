@@ -50,6 +50,32 @@ describe("App", () => {
     expect(screen.getByText(/add a team/i)).toBeInTheDocument();
   });
 
+  it("adds the sample roster when the 🫧 button is clicked", async () => {
+    const add = vi.fn();
+    vi.spyOn(followed, "useFollowedTeams").mockReturnValue({
+      followed: [],
+      add,
+      remove: vi.fn(),
+    });
+    renderApp();
+    await userEvent.click(screen.getByRole("button", { name: /add sample teams/i }));
+
+    // forEach passes (team, index, array); only the first arg is the team.
+    const added = add.mock.calls.map((c) => c[0]);
+    expect(added).toEqual([
+      { leagueId: "wnba", teamId: "9" },
+      { leagueId: "wnba", teamId: "14" },
+      { leagueId: "mlb", teamId: "21" },
+      { leagueId: "epl", teamId: "384" },
+      { leagueId: "nba", teamId: "18" },
+      { leagueId: "nfl", teamId: "25" },
+      { leagueId: "nfl", teamId: "10" },
+      { leagueId: "nhl", teamId: "11" },
+      { leagueId: "nhl", teamId: "18" },
+      { leagueId: "mls", teamId: "190" },
+    ]);
+  });
+
   it("filters the visible panels when a sport chip is clicked", async () => {
     vi.spyOn(followed, "useFollowedTeams").mockReturnValue({
       followed: [

@@ -7,6 +7,22 @@ import { useFollowedTeams } from "./hooks/useFollowedTeams";
 import { useInSeasonLeagues } from "./hooks/useInSeasonLeagues";
 import { WeekBanner } from "./components/WeekBanner";
 import { useUpcomingWeek } from "./hooks/useUpcomingWeek";
+import type { FollowedTeam } from "./hooks/useFollowedTeams";
+
+// Debug helper: a fixed sample roster across every supported league, loaded by
+// the 🫧 button next to "Add team". IDs come from the bundled teamsData.ts.
+const SAMPLE_TEAMS: FollowedTeam[] = [
+  { leagueId: "wnba", teamId: "9" }, // New York Liberty
+  { leagueId: "wnba", teamId: "14" }, // Seattle Storm
+  { leagueId: "mlb", teamId: "21" }, // New York Mets
+  { leagueId: "epl", teamId: "384" }, // Crystal Palace
+  { leagueId: "nba", teamId: "18" }, // New York Knicks
+  { leagueId: "nfl", teamId: "25" }, // San Francisco 49ers
+  { leagueId: "nfl", teamId: "10" }, // Tennessee Titans
+  { leagueId: "nhl", teamId: "11" }, // New Jersey Devils
+  { leagueId: "nhl", teamId: "18" }, // San Jose Sharks
+  { leagueId: "mls", teamId: "190" }, // Red Bull New York
+];
 
 export default function App() {
   const { followed, add, remove } = useFollowedTeams();
@@ -17,7 +33,10 @@ export default function App() {
 
   return (
     <div className="app">
-      <Header onAddClick={() => setDialogOpen(true)} />
+      <Header
+        onAddClick={() => setDialogOpen(true)}
+        onAddSampleTeams={() => SAMPLE_TEAMS.forEach(add)}
+      />
       <SportFilterBar
         followedLeagueIds={followed.map((t) => t.leagueId)}
         activeLeague={activeLeague}

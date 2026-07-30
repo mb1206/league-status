@@ -21,6 +21,11 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   background: var(--accent); color: white; border: none;
   padding: 8px 14px; border-radius: 8px; cursor: pointer;
 }
+.app-header-actions { display: flex; align-items: center; gap: 8px; }
+.debug-teams-btn {
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  padding: 7px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; line-height: 1;
+}
 .empty-state { color: var(--muted); text-align: center; padding: 48px 0; }
 .sport-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .sport-chip {
