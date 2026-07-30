@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import type { Game, Team } from "../domain/types";
+import type { Game, LeagueConfig, Team } from "../domain/types";
 import { GameList } from "./GameList";
+import { SeasonCalendar } from "./SeasonCalendar";
 
 type Tab = "past" | "upcoming";
+type View = "list" | "calendar";
 
 interface SeasonGamesModalProps {
   team: Team;
+  league: LeagueConfig;
   pastGames: Game[];
   upcomingGames: Game[];
   onClose: () => void;
@@ -13,12 +16,14 @@ interface SeasonGamesModalProps {
 
 export function SeasonGamesModal({
   team,
+  league,
   pastGames,
   upcomingGames,
   onClose,
 }: SeasonGamesModalProps) {
   // Opened via the "View all" button next to Past, so Past is the default tab.
   const [tab, setTab] = useState<Tab>("past");
+  const [view, setView] = useState<View>("list");
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -32,7 +37,7 @@ export function SeasonGamesModal({
   return (
     <div className="dialog-backdrop" onClick={onClose}>
       <div
-        className="dialog season-games-dialog"
+        className={`dialog season-games-dialog${view === "calendar" ? " calendar" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
@@ -52,35 +57,68 @@ export function SeasonGamesModal({
             )}
             {team.name} — all games
           </h3>
+          <div className="season-games-view-toggle" role="group" aria-label="View">
+            <button
+              type="button"
+              aria-pressed={view === "list"}
+              className={`season-games-view-btn${view === "list" ? " active" : ""}`}
+              aria-label="List view"
+              onClick={() => setView("list")}
+            >
+              ☰
+            </button>
+            <button
+              type="button"
+              aria-pressed={view === "calendar"}
+              className={`season-games-view-btn${view === "calendar" ? " active" : ""}`}
+              aria-label="Calendar view"
+              onClick={() => setView("calendar")}
+            >
+              📅
+            </button>
+          </div>
           <button className="dialog-close" aria-label="Close" onClick={onClose}>
             ×
           </button>
         </div>
-        <div className="season-games-tabs" role="tablist" aria-label="Filter games">
-          <button
-            role="tab"
-            aria-selected={tab === "past"}
-            className={`season-games-tab${tab === "past" ? " active" : ""}`}
-            onClick={() => setTab("past")}
-          >
-            Past
-          </button>
-          <button
-            role="tab"
-            aria-selected={tab === "upcoming"}
-            className={`season-games-tab${tab === "upcoming" ? " active" : ""}`}
-            onClick={() => setTab("upcoming")}
-          >
-            Upcoming
-          </button>
-        </div>
-        <div className="season-games-body">
-          {tab === "past" ? (
-            <GameList games={pastGames} team={team} />
-          ) : (
-            <GameList showTime games={upcomingGames} team={team} />
-          )}
-        </div>
+        {view === "list" ? (
+          <>
+            <div className="season-games-tabs" role="tablist" aria-label="Filter games">
+              <button
+                role="tab"
+                aria-selected={tab === "past"}
+                className={`season-games-tab${tab === "past" ? " active" : ""}`}
+                onClick={() => setTab("past")}
+              >
+                Past
+              </button>
+              <button
+                role="tab"
+                aria-selected={tab === "upcoming"}
+                className={`season-games-tab${tab === "upcoming" ? " active" : ""}`}
+                onClick={() => setTab("upcoming")}
+              >
+                Upcoming
+              </button>
+            </div>
+            <div className="season-games-body">
+              {tab === "past" ? (
+                <GameList games={pastGames} team={team} league={league} />
+              ) : (
+                <GameList showTime games={upcomingGames} team={team} league={league} />
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="season-games-body">
+            <SeasonCalendar
+              team={team}
+              league={league}
+              pastGames={pastGames}
+              upcomingGames={upcomingGames}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
