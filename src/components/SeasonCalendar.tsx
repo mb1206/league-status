@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Game, LeagueConfig, Team } from "../domain/types";
-import { GameList } from "./GameList";
+import { LinkIcons } from "./LinkIcons";
+import { gameLinks } from "./gameLinks";
 import { buildCalendar, downloadIcs, icsBulkFilename } from "../leagues/ics";
 
 interface SeasonCalendarProps {
@@ -22,6 +23,12 @@ function dayKey(d: Date): string {
 function monthLabel(key: string): string {
   const [y, m] = key.split("-").map(Number);
   return new Date(y, m - 1, 1).toLocaleDateString(undefined, { month: "long", year: "numeric" });
+}
+function scoreText(g: Game): string {
+  if (g.homeTeam.score == null || g.awayTeam.score == null) return "";
+  const mine = g.isHome ? g.homeTeam.score : g.awayTeam.score;
+  const theirs = g.isHome ? g.awayTeam.score : g.homeTeam.score;
+  return `${mine}–${theirs}`;
 }
 
 export function SeasonCalendar({
@@ -52,7 +59,6 @@ export function SeasonCalendar({
   }, [months, nowKey]);
 
   const [index, setIndex] = useState(initialIndex);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   if (months.length === 0) {
     return <p className="game-list-empty">No games</p>;
@@ -76,7 +82,6 @@ export function SeasonCalendar({
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
 
-  const selectedGames = selectedDay ? (gamesByDay.get(selectedDay) ?? []) : [];
   const hasUpcoming = upcomingGames.length > 0;
 
   return (
@@ -86,10 +91,7 @@ export function SeasonCalendar({
           className="season-calendar-navbtn"
           aria-label="Previous month"
           disabled={index === 0}
-          onClick={() => {
-            setSelectedDay(null);
-            setIndex((i) => Math.max(0, i - 1));
-          }}
+          onClick={() => setIndex((i) => Math.max(0, i - 1))}
         >
           ‹
         </button>
@@ -98,10 +100,7 @@ export function SeasonCalendar({
           className="season-calendar-navbtn"
           aria-label="Next month"
           disabled={index === months.length - 1}
-          onClick={() => {
-            setSelectedDay(null);
-            setIndex((i) => Math.min(months.length - 1, i + 1));
-          }}
+          onClick={() => setIndex((i) => Math.min(months.length - 1, i + 1))}
         >
           ›
         </button>
@@ -128,39 +127,38 @@ export function SeasonCalendar({
           const key = `${monthKey}-${String(day).padStart(2, "0")}`;
           const games = gamesByDay.get(key) ?? [];
           return (
-            <div
-              key={key}
-              className={`season-calendar-day${key === todayKey ? " today" : ""}`}
-            >
+            <div key={key} className={`season-calendar-day${key === todayKey ? " today" : ""}`}>
               <span className="season-calendar-daynum">{day}</span>
               {games.map((g) => {
                 const opp = g.isHome ? g.awayTeam.abbreviation : g.homeTeam.abbreviation;
                 const played = g.status === "final";
+                const score = scoreText(g);
                 return (
-                  <button
+                  <div
                     key={g.id}
-                    className={`season-calendar-chip${played ? " past" : ""}`}
-                    aria-label={`${team.name} ${g.isHome ? "vs" : "@"} ${opp}, ${monthLabel(monthKey)} ${day}`}
-                    onClick={() => setSelectedDay(key)}
+                    className={`season-calendar-game${played ? " past" : ""}`}
                   >
-                    {g.isHome ? "vs" : "@"} {opp}
-                    {played && g.result ? ` ${g.result}` : ""}
-                  </button>
+                    <span className="season-calendar-gameopp">
+                      {g.isHome ? "vs" : "@"} {opp}
+                    </span>
+                    {played && (g.result || score) && (
+                      <span className="season-calendar-gamescore">
+                        {g.result && (
+                          <span className={`result-${g.result}`}>{g.result}</span>
+                        )}
+                        {score && <span className="season-calendar-gamenums">{score}</span>}
+                      </span>
+                    )}
+                    <LinkIcons
+                      className="season-calendar-gamelinks"
+                      links={gameLinks(team, g, league)}
+                    />
+                  </div>
                 );
               })}
             </div>
           );
         })}
-      </div>
-
-      {selectedGames.length > 0 && (
-        <div className="season-calendar-detail">
-          <GameList showTime games={selectedGames} team={team} league={league} />
-        </div>
-      )}
-
-      <div className="season-calendar-agenda" data-testid="calendar-agenda">
-        <GameList showTime games={monthGames} team={team} league={league} />
       </div>
     </div>
   );

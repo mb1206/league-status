@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SeasonCalendar } from "./SeasonCalendar";
 import { icsBulkFilename } from "../leagues/ics";
@@ -46,14 +46,24 @@ describe("SeasonCalendar", () => {
     expect(screen.getByRole("button", { name: /next month/i })).toBeDisabled();
   });
 
-  it("shows a '+' export on the upcoming month's agenda but not the past month's", async () => {
+  it("shows the score and result inside the day cell for a played game", () => {
     renderCal();
-    const octAgenda = screen.getByTestId("calendar-agenda");
-    expect(within(octAgenda).queryByRole("button", { name: /add .* to calendar/i })).toBeNull();
+    // Oct 15: LAL (home) 110, BOS 99 -> "vs BOS", result W, score 110–99.
+    expect(screen.getByText("vs BOS")).toBeInTheDocument();
+    expect(screen.getByText("W")).toBeInTheDocument();
+    expect(screen.getByText("110–99")).toBeInTheDocument();
+  });
+
+  it("puts a '+' export chip on an upcoming game's cell but not a played game's", async () => {
+    renderCal();
+    // October's game is played -> no per-game add-to-calendar chip in the grid.
+    expect(screen.queryByRole("button", { name: /add .* to calendar/i })).toBeNull();
 
     await userEvent.click(screen.getByRole("button", { name: /next month/i }));
-    const decAgenda = screen.getByTestId("calendar-agenda");
-    expect(within(decAgenda).getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
+    // December's game is upcoming -> its cell carries the add-to-calendar chip.
+    expect(
+      screen.getByRole("button", { name: /add .* to calendar/i }),
+    ).toBeInTheDocument();
   });
 
   it("bulk-exports all upcoming games", async () => {
