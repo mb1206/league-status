@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SeasonCalendar } from "./SeasonCalendar";
+import { icsBulkFilename } from "../leagues/ics";
 import type { Game, LeagueConfig, Team } from "../domain/types";
 
 const nba: LeagueConfig = {
@@ -58,9 +59,17 @@ describe("SeasonCalendar", () => {
   it("bulk-exports all upcoming games", async () => {
     const createUrl = vi.fn(() => "blob:x");
     vi.stubGlobal("URL", { createObjectURL: createUrl, revokeObjectURL: vi.fn() });
+    let downloadName: string | undefined;
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        downloadName = this.download;
+      });
     renderCal();
     await userEvent.click(screen.getByRole("button", { name: /add all upcoming/i }));
     expect(createUrl).toHaveBeenCalledTimes(1);
+    expect(downloadName).toBe(icsBulkFilename(team));
+    clickSpy.mockRestore();
     vi.unstubAllGlobals();
   });
 });

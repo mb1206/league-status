@@ -58,7 +58,7 @@ export function SeasonCalendar({
     return <p className="game-list-empty">No games</p>;
   }
 
-  const monthKey = months[index];
+  const monthKey = months[Math.min(index, months.length - 1)];
   const monthGames = allGames.filter((g) => ym(new Date(g.date)) === monthKey);
   const gamesByDay = new Map<string, Game[]>();
   for (const g of monthGames) {
