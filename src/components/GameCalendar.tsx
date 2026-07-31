@@ -1,14 +1,12 @@
-import { useMemo, useState } from "react";
-import type { Game, LeagueConfig, Team } from "../domain/types";
+import { useMemo, useState, type ReactNode } from "react";
+import type { Game } from "../domain/types";
 import { LinkIcons } from "./LinkIcons";
 import { gameLinks } from "./gameLinks";
-import { buildCalendar, downloadIcs, icsBulkFilename } from "../leagues/ics";
+import type { CalendarEntry } from "../leagues/calendar";
 
-interface SeasonCalendarProps {
-  team: Team;
-  league: LeagueConfig;
-  pastGames: Game[];
-  upcomingGames: Game[];
+interface GameCalendarProps {
+  entries: CalendarEntry[];
+  actions?: ReactNode;
   now?: Date;
 }
 
@@ -31,25 +29,26 @@ function scoreText(g: Game): string {
   return `${mine}–${theirs}`;
 }
 
-export function SeasonCalendar({
-  team,
-  league,
-  pastGames,
-  upcomingGames,
-  now = new Date(),
-}: SeasonCalendarProps) {
-  const allGames = useMemo(
+export function GameCalendar({ entries, actions, now = new Date() }: GameCalendarProps) {
+  const sorted = useMemo(
     () =>
-      [...pastGames, ...upcomingGames].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      [...entries].sort(
+        (a, b) => new Date(a.game.date).getTime() - new Date(b.game.date).getTime(),
       ),
-    [pastGames, upcomingGames],
+    [entries],
   );
 
   const months = useMemo(() => {
-    const set = new Set(allGames.map((g) => ym(new Date(g.date))));
+    const set = new Set(sorted.map((e) => ym(new Date(e.game.date))));
     return [...set].sort();
-  }, [allGames]);
+  }, [sorted]);
+
+  // Show a per-game team badge only when the calendar spans more than one team;
+  // in the single-team modal that would be redundant noise.
+  const multiTeam = useMemo(
+    () => new Set(sorted.map((e) => `${e.team.leagueId}:${e.team.id}`)).size > 1,
+    [sorted],
+  );
 
   const nowKey = ym(now);
   const initialIndex = useMemo(() => {
@@ -65,11 +64,11 @@ export function SeasonCalendar({
   }
 
   const monthKey = months[Math.min(index, months.length - 1)];
-  const monthGames = allGames.filter((g) => ym(new Date(g.date)) === monthKey);
-  const gamesByDay = new Map<string, Game[]>();
-  for (const g of monthGames) {
-    const k = dayKey(new Date(g.date));
-    gamesByDay.set(k, [...(gamesByDay.get(k) ?? []), g]);
+  const monthEntries = sorted.filter((e) => ym(new Date(e.game.date)) === monthKey);
+  const entriesByDay = new Map<string, CalendarEntry[]>();
+  for (const e of monthEntries) {
+    const k = dayKey(new Date(e.game.date));
+    entriesByDay.set(k, [...(entriesByDay.get(k) ?? []), e]);
   }
 
   const [y, m] = monthKey.split("-").map(Number);
@@ -81,8 +80,6 @@ export function SeasonCalendar({
     ...Array<null>(firstWeekday).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ];
-
-  const hasUpcoming = upcomingGames.length > 0;
 
   return (
     <div className="season-calendar">
@@ -104,16 +101,7 @@ export function SeasonCalendar({
         >
           ›
         </button>
-        {hasUpcoming && (
-          <button
-            className="season-calendar-bulk"
-            onClick={() =>
-              downloadIcs(icsBulkFilename(team), buildCalendar(team, league, upcomingGames))
-            }
-          >
-            ➕ Add all upcoming
-          </button>
-        )}
+        {actions && <div className="season-calendar-actions">{actions}</div>}
       </div>
 
       <div className="season-calendar-grid" role="grid">
@@ -125,27 +113,39 @@ export function SeasonCalendar({
         {cells.map((day, i) => {
           if (day == null) return <div key={`b${i}`} className="season-calendar-day empty" />;
           const key = `${monthKey}-${String(day).padStart(2, "0")}`;
-          const games = gamesByDay.get(key) ?? [];
+          const dayEntries = entriesByDay.get(key) ?? [];
           return (
             <div key={key} className={`season-calendar-day${key === todayKey ? " today" : ""}`}>
               <span className="season-calendar-daynum">{day}</span>
-              {games.map((g) => {
+              {dayEntries.map(({ team, league, game: g }) => {
                 const opp = g.isHome ? g.awayTeam.abbreviation : g.homeTeam.abbreviation;
                 const played = g.status === "final";
                 const score = scoreText(g);
                 return (
                   <div
-                    key={g.id}
+                    key={`${team.leagueId}:${team.id}:${g.id}`}
                     className={`season-calendar-game${played ? " past" : ""}`}
                   >
                     <span className="season-calendar-gameopp">
+                      {multiTeam &&
+                        (team.logoUrl ? (
+                          <img
+                            className="season-calendar-gamelogo"
+                            src={team.logoUrl}
+                            alt={team.abbreviation}
+                            width={14}
+                            height={14}
+                          />
+                        ) : (
+                          <span className="season-calendar-gameicon" aria-hidden>
+                            {league.icon}
+                          </span>
+                        ))}
                       {g.isHome ? "vs" : "@"} {opp}
                     </span>
                     {played && (g.result || score) && (
                       <span className="season-calendar-gamescore">
-                        {g.result && (
-                          <span className={`result-${g.result}`}>{g.result}</span>
-                        )}
+                        {g.result && <span className={`result-${g.result}`}>{g.result}</span>}
                         {score && <span className="season-calendar-gamenums">{score}</span>}
                       </span>
                     )}

@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { SeasonGamesModal } from "./SeasonGamesModal";
 import type { Game, Team } from "../domain/types";
 import { getLeagueModule } from "../leagues/registry";
+import { icsBulkFilename } from "../leagues/ics";
 
 const league = getLeagueModule("epl").config;
 
@@ -91,5 +92,26 @@ describe("SeasonGamesModal", () => {
     expect(screen.getByRole("button", { name: /list view/i })).toBeInTheDocument();
     // A weekday header proves the calendar rendered.
     expect(screen.getByText("Sun")).toBeInTheDocument();
+  });
+
+  it("bulk-exports all upcoming games from the calendar view", async () => {
+    const createUrl = vi.fn(() => "blob:x");
+    vi.stubGlobal("URL", { createObjectURL: createUrl, revokeObjectURL: vi.fn() });
+    let downloadName: string | undefined;
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        downloadName = this.download;
+      });
+    render(
+      <SeasonGamesModal team={team} league={league} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
+    );
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /calendar view/i }));
+    await user.click(screen.getByRole("button", { name: /add all upcoming/i }));
+    expect(createUrl).toHaveBeenCalledTimes(1);
+    expect(downloadName).toBe(icsBulkFilename(team));
+    clickSpy.mockRestore();
+    vi.unstubAllGlobals();
   });
 });

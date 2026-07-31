@@ -1,18 +1,20 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SeasonCalendar } from "./SeasonCalendar";
-import { icsBulkFilename } from "../leagues/ics";
+import { GameCalendar } from "./GameCalendar";
+import { toEntries } from "../leagues/calendar";
 import type { Game, LeagueConfig, Team } from "../domain/types";
 
 const nba: LeagueConfig = {
   id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true,
 };
-const team: Team = { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL" };
-const base = { seasonType: "regular" as const, homeTeam: { id: "13", abbreviation: "LAL" } };
+const nhl: LeagueConfig = {
+  id: "nhl", sport: "hockey", league: "nhl", displayName: "NHL", icon: "🏒", hasPlayoffs: true,
+};
+const lakers: Team = { id: "13", leagueId: "nba", name: "Los Angeles Lakers", abbreviation: "LAL", logoUrl: "https://logos.example/lal.png" };
+const devils: Team = { id: "11", leagueId: "nhl", name: "New Jersey Devils", abbreviation: "NJD" };
+const base = { seasonType: "regular" as const };
 
-// Games sit in October (past) and December (upcoming); November is empty so the
-// nav must skip it. `now` is fixed in October so the calendar opens there.
 const NOW = new Date("2026-10-20T12:00:00Z");
 const past: Game[] = [
   { ...base, id: "p1", date: "2026-10-15T02:30:00Z", status: "final", result: "W",
@@ -25,16 +27,15 @@ const upcoming: Game[] = [
 
 function renderCal() {
   return render(
-    <SeasonCalendar team={team} league={nba} pastGames={past} upcomingGames={upcoming} now={NOW} />,
+    <GameCalendar entries={toEntries(lakers, nba, [...past, ...upcoming])} now={NOW} />,
   );
 }
 
-describe("SeasonCalendar", () => {
+describe("GameCalendar", () => {
   it("opens on the nearest month with games and shows the weekday header", () => {
     renderCal();
     expect(screen.getByText(/October 2026/)).toBeInTheDocument();
     expect(screen.getByText("Sun")).toBeInTheDocument();
-    // At the first month, previous is disabled.
     expect(screen.getByRole("button", { name: /previous month/i })).toBeDisabled();
   });
 
@@ -42,13 +43,11 @@ describe("SeasonCalendar", () => {
     renderCal();
     await userEvent.click(screen.getByRole("button", { name: /next month/i }));
     expect(screen.getByText(/December 2026/)).toBeInTheDocument();
-    // Last month with games -> next disabled.
     expect(screen.getByRole("button", { name: /next month/i })).toBeDisabled();
   });
 
   it("shows the score and result inside the day cell for a played game", () => {
     renderCal();
-    // Oct 15: LAL (home) 110, BOS 99 -> "vs BOS", result W, score 110–99.
     expect(screen.getByText("vs BOS")).toBeInTheDocument();
     expect(screen.getByText("W")).toBeInTheDocument();
     expect(screen.getByText("110–99")).toBeInTheDocument();
@@ -56,30 +55,37 @@ describe("SeasonCalendar", () => {
 
   it("puts a '+' export chip on an upcoming game's cell but not a played game's", async () => {
     renderCal();
-    // October's game is played -> no per-game add-to-calendar chip in the grid.
     expect(screen.queryByRole("button", { name: /add .* to calendar/i })).toBeNull();
-
     await userEvent.click(screen.getByRole("button", { name: /next month/i }));
-    // December's game is upcoming -> its cell carries the add-to-calendar chip.
-    expect(
-      screen.getByRole("button", { name: /add .* to calendar/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
   });
 
-  it("bulk-exports all upcoming games", async () => {
-    const createUrl = vi.fn(() => "blob:x");
-    vi.stubGlobal("URL", { createObjectURL: createUrl, revokeObjectURL: vi.fn() });
-    let downloadName: string | undefined;
-    const clickSpy = vi
-      .spyOn(HTMLAnchorElement.prototype, "click")
-      .mockImplementation(function (this: HTMLAnchorElement) {
-        downloadName = this.download;
-      });
-    renderCal();
-    await userEvent.click(screen.getByRole("button", { name: /add all upcoming/i }));
-    expect(createUrl).toHaveBeenCalledTimes(1);
-    expect(downloadName).toBe(icsBulkFilename(team));
-    clickSpy.mockRestore();
-    vi.unstubAllGlobals();
+  it("renders the actions slot in the nav row", () => {
+    render(
+      <GameCalendar
+        entries={toEntries(lakers, nba, past)}
+        actions={<button>Add all upcoming</button>}
+        now={NOW}
+      />,
+    );
+    expect(screen.getByRole("button", { name: /add all upcoming/i })).toBeInTheDocument();
+  });
+
+  it("shows a team badge per game only when multiple teams are present", () => {
+    // Two teams with a game in the same October: Lakers (logo) + Devils (icon fallback).
+    const devilsGame: Game = {
+      ...base, id: "d1", date: "2026-10-16T23:00:00Z", status: "scheduled",
+      isHome: true, homeTeam: { id: "11", abbreviation: "NJD" }, awayTeam: { id: "18", abbreviation: "SJS" },
+    };
+    render(
+      <GameCalendar
+        entries={[...toEntries(lakers, nba, past), ...toEntries(devils, nhl, [devilsGame])]}
+        now={NOW}
+      />,
+    );
+    // Lakers logo rendered as an img with the team abbreviation as alt.
+    expect(screen.getByAltText("LAL")).toBeInTheDocument();
+    // Devils have no logoUrl → league icon fallback text present.
+    expect(screen.getByText("🏒")).toBeInTheDocument();
   });
 });

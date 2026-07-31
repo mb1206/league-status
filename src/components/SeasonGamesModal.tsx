@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { Game, LeagueConfig, Team } from "../domain/types";
 import { GameList } from "./GameList";
-import { SeasonCalendar } from "./SeasonCalendar";
+import { GameCalendar } from "./GameCalendar";
+import { toEntries } from "../leagues/calendar";
+import { buildCalendar, downloadIcs, icsBulkFilename } from "../leagues/ics";
 
 type Tab = "past" | "upcoming";
 type View = "list" | "calendar";
@@ -123,11 +125,20 @@ export function SeasonGamesModal({
           </>
         ) : (
           <div className="season-games-body">
-            <SeasonCalendar
-              team={team}
-              league={league}
-              pastGames={pastGames}
-              upcomingGames={upcomingGames}
+            <GameCalendar
+              entries={toEntries(team, league, [...pastGames, ...upcomingGames])}
+              actions={
+                upcomingGames.length > 0 ? (
+                  <button
+                    className="season-calendar-bulk"
+                    onClick={() =>
+                      downloadIcs(icsBulkFilename(team), buildCalendar(team, league, upcomingGames))
+                    }
+                  >
+                    ➕ Add all upcoming
+                  </button>
+                ) : undefined
+              }
             />
           </div>
         )}
