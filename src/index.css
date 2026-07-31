@@ -47,7 +47,15 @@ body { margin: 0; background: var(--bg); color: var(--text); }
 }
 .team-group-header:first-child { margin-top: 0; }
 .week-banner { margin-top: 16px; }
-.week-banner-title { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.week-banner-title { margin: 0; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.week-banner-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.week-calendar-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0; line-height: 1;
+  background: var(--panel); color: var(--text); border: 1px solid var(--line);
+  border-radius: 6px; font-size: 13px; cursor: pointer;
+}
+.week-calendar-btn:hover { border-color: var(--accent); }
 .week-banner-empty { color: var(--muted); font-size: 14px; margin: 0; }
 /* padding-bottom keeps the horizontal scrollbar clear of the cards */
 .week-strip { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 14px; }

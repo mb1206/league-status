@@ -3,6 +3,7 @@ import { Header } from "./components/Header";
 import { SportFilterBar } from "./components/SportFilterBar";
 import { TeamPanelList } from "./components/TeamPanelList";
 import { AddTeamDialog } from "./components/AddTeamDialog";
+import { CalendarModal } from "./components/CalendarModal";
 import { useFollowedTeams } from "./hooks/useFollowedTeams";
 import { useInSeasonLeagues } from "./hooks/useInSeasonLeagues";
 import { WeekBanner } from "./components/WeekBanner";
@@ -27,6 +28,7 @@ const SAMPLE_TEAMS: FollowedTeam[] = [
 export default function App() {
   const { followed, add, remove } = useFollowedTeams();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [activeLeague, setActiveLeague] = useState<string | null>(null);
   const inSeasonLeagues = useInSeasonLeagues(followed);
   const week = useUpcomingWeek(followed);
@@ -45,7 +47,11 @@ export default function App() {
         onAddSport={() => setDialogOpen(true)}
       />
       {followed.length > 0 && (
-        <WeekBanner groups={week} activeLeague={activeLeague} />
+        <WeekBanner
+          groups={week}
+          activeLeague={activeLeague}
+          onOpenCalendar={() => setCalendarOpen(true)}
+        />
       )}
       <main>
         <TeamPanelList
@@ -57,6 +63,9 @@ export default function App() {
       </main>
       {dialogOpen && (
         <AddTeamDialog onAdd={add} onClose={() => setDialogOpen(false)} />
+      )}
+      {calendarOpen && (
+        <CalendarModal followed={followed} onClose={() => setCalendarOpen(false)} />
       )}
     </div>
   );

@@ -8,6 +8,7 @@ import * as statusHook from "../hooks/useTeamStatus";
 import * as standingsHook from "../hooks/useLeagueStandings";
 import * as inSeasonHook from "../hooks/useInSeasonLeagues";
 import * as weekHook from "../hooks/useUpcomingWeek";
+import * as allGamesHook from "../hooks/useAllGames";
 import type { TeamStatus } from "../domain/types";
 
 function renderApp() {
@@ -38,6 +39,7 @@ describe("App", () => {
     } as ReturnType<typeof standingsHook.useLeagueStandings>);
     vi.spyOn(inSeasonHook, "useInSeasonLeagues").mockReturnValue(new Set());
     vi.spyOn(weekHook, "useUpcomingWeek").mockReturnValue([]);
+    vi.spyOn(allGamesHook, "useAllGames").mockReturnValue([]);
   });
 
   it("shows an empty state when no teams are followed", () => {
@@ -156,5 +158,24 @@ describe("App", () => {
 
     renderApp();
     expect(screen.getByRole("link", { name: "LAL vs GSW" })).toHaveAttribute("href", "#team-nba-13");
+  });
+
+  it("opens the all-teams calendar from the Next 7 Days header", async () => {
+    vi.spyOn(followed, "useFollowedTeams").mockReturnValue({
+      followed: [{ leagueId: "nba", teamId: "Lakers" }],
+      add: vi.fn(),
+      remove: vi.fn(),
+    });
+    vi.spyOn(statusHook, "useTeamStatus").mockImplementation(
+      (team) =>
+        ({
+          isLoading: false, isError: false, isSuccess: true, data: statusFor(team.teamId),
+        }) as ReturnType<typeof statusHook.useTeamStatus>,
+    );
+    renderApp();
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await userEvent.click(screen.getByRole("button", { name: /all teams calendar/i }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByText(/all teams — calendar/i)).toBeInTheDocument();
   });
 });
