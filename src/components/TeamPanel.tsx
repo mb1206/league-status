@@ -129,6 +129,7 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
           {showAll && (
             <SeasonGamesModal
               team={query.data.team}
+              league={query.data.league}
               pastGames={query.data.pastGames}
               upcomingGames={query.data.upcomingGames}
               onClose={() => setShowAll(false)}

@@ -1,12 +1,7 @@
 import type { ReactNode } from "react";
-import type { Game, Team } from "../domain/types";
+import type { Game, LeagueConfig, Team } from "../domain/types";
 import { LinkIcons } from "./LinkIcons";
-import type { LinkChip } from "./LinkIcons";
-import {
-  redditGameUrl,
-  youtubeGameHighlightsUrl,
-  youtubeGamePreviewUrl,
-} from "../leagues/externalLinks";
+import { gameLinks } from "./gameLinks";
 
 interface GameListProps {
   title?: string;
@@ -15,29 +10,12 @@ interface GameListProps {
   twoColumn?: boolean;
   action?: ReactNode;
   team?: Team;
+  league?: LeagueConfig;
 }
 
 function opponent(g: Game): string {
   const opp = g.isHome ? g.awayTeam : g.homeTeam;
   return `${g.isHome ? "vs" : "@"} ${opp.abbreviation}`;
-}
-
-function gameLinks(team: Team, g: Game): LinkChip[] {
-  const oppAbbr = g.isHome ? g.awayTeam.abbreviation : g.homeTeam.abbreviation;
-  // A played game links to highlights; one not yet played links to a preview.
-  const played = g.status === "final";
-  return [
-    {
-      kind: "youtube",
-      href: played ? youtubeGameHighlightsUrl(team, g) : youtubeGamePreviewUrl(team, g),
-      label: `${team.name} vs ${oppAbbr} ${played ? "highlights" : "preview"} on YouTube`,
-    },
-    {
-      kind: "reddit",
-      href: redditGameUrl(team, g),
-      label: `${team.name} vs ${oppAbbr} on Reddit`,
-    },
-  ];
 }
 
 function scoreText(g: Game): string {
@@ -66,6 +44,7 @@ export function GameList({
   twoColumn = false,
   action,
   team,
+  league,
 }: GameListProps) {
   return (
     <div className="game-list">
@@ -91,7 +70,7 @@ export function GameList({
               <span className="game-score">{scoreText(g)}</span>
               <span className="game-meta">
                 <span className="game-date">{dateText(g.date, showTime)}</span>
-                {team && <LinkIcons className="game-links" links={gameLinks(team, g)} />}
+                {team && <LinkIcons className="game-links" links={gameLinks(team, g, league)} />}
               </span>
             </li>
           ))}

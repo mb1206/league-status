@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { LinkIcons } from "./LinkIcons";
 import type { LinkChip } from "./LinkIcons";
 
@@ -42,5 +43,15 @@ describe("LinkIcons", () => {
   it("applies an extra className to the wrapper", () => {
     const { container } = render(<LinkIcons links={links} className="game-links" />);
     expect(container.querySelector(".link-icons.game-links")).not.toBeNull();
+  });
+
+  it("renders an action chip as a button that fires onClick", async () => {
+    const onClick = vi.fn();
+    render(<LinkIcons links={[{ kind: "ics", label: "Add to calendar", onClick }]} />);
+    const btn = screen.getByRole("button", { name: "Add to calendar" });
+    expect(btn).toHaveTextContent("➕");
+    expect(screen.queryByRole("link")).toBeNull();
+    await userEvent.click(btn);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 });
