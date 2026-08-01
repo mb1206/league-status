@@ -17,6 +17,7 @@ body { margin: 0; background: var(--bg); color: var(--text); }
   display: flex; align-items: center; justify-content: space-between;
   padding-bottom: 12px; border-bottom: 1px solid var(--line);
 }
+.app-header h1 { font-weight: 600; }
 .add-team-btn, .panel-error button {
   background: var(--accent); color: white; border: none;
   padding: 8px 14px; border-radius: 8px; cursor: pointer;
