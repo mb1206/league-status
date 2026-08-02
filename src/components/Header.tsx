@@ -6,7 +6,9 @@ interface HeaderProps {
 export function Header({ onAddClick, onAddSampleTeams }: HeaderProps) {
   return (
     <header className="app-header">
-      <h1>track my teamzzz</h1>
+      <h1>
+        <span aria-hidden>🏆</span> track my teamzzz
+      </h1>
       <div className="app-header-actions">
         <button
           className="debug-teams-btn"
