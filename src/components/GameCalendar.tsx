@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Game } from "../domain/types";
 import { LinkIcons } from "./LinkIcons";
 import { gameLinks } from "./gameLinks";
@@ -58,6 +58,10 @@ export function GameCalendar({ entries, actions, now = new Date() }: GameCalenda
   }, [months, nowKey]);
 
   const [index, setIndex] = useState(initialIndex);
+
+  useEffect(() => {
+    setIndex(initialIndex);
+  }, [initialIndex]);
 
   if (months.length === 0) {
     return <p className="game-list-empty">No games</p>;

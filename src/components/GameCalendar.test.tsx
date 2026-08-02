@@ -71,6 +71,21 @@ describe("GameCalendar", () => {
     expect(screen.getByRole("button", { name: /add all upcoming/i })).toBeInTheDocument();
   });
 
+  it("resyncs to the nearest month when entries arrive after mount", () => {
+    // Games in August (earliest, before NOW's month) and December (nearest month >= NOW).
+    // Nothing in October itself, so the earliest month and the nearest month differ —
+    // an index stuck at the empty-render's default of 0 would land on August, not December.
+    const older: Game[] = [
+      { ...base, id: "p0", date: "2026-08-10T02:30:00Z", status: "final", result: "L",
+        isHome: true, homeTeam: { id: "13", abbreviation: "LAL", score: 90 }, awayTeam: { id: "2", abbreviation: "BOS", score: 95 } },
+    ];
+    const { rerender } = render(<GameCalendar entries={[]} now={NOW} />);
+    expect(screen.getByText(/no games/i)).toBeInTheDocument();
+    rerender(<GameCalendar entries={toEntries(lakers, nba, [...older, ...upcoming])} now={NOW} />);
+    // NOW is in October; nearest month with games >= now is December, not August (the earliest).
+    expect(screen.getByText(/December 2026/)).toBeInTheDocument();
+  });
+
   it("shows a team badge per game only when multiple teams are present", () => {
     // Two teams with a game in the same October: Lakers (logo) + Devils (icon fallback).
     const devilsGame: Game = {
