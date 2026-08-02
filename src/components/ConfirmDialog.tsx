@@ -24,7 +24,7 @@ export function ConfirmDialog({
   }, [onCancel]);
 
   return (
-    <div className="dialog-backdrop" onClick={onCancel}>
+    <div className="dialog-backdrop centered" onClick={onCancel}>
       <div
         className="dialog confirm-dialog"
         role="alertdialog"
