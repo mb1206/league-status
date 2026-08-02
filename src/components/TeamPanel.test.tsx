@@ -117,7 +117,7 @@ describe("TeamPanel", () => {
     render(<TeamPanel team={team} onRemove={() => {}} />);
     expect(
       screen.getByRole("link", { name: /Los Angeles Lakers on ESPN/i }),
-    ).toHaveAttribute("href", "https://www.espn.com/nba/team/_/id/13");
+    ).toHaveAttribute("href", "https://www.espn.com/nba/team/_/name/lal/los-angeles-lakers");
     expect(
       screen.getByRole("link", { name: /season highlights on YouTube/i }),
     ).toBeInTheDocument();

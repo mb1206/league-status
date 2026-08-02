@@ -28,11 +28,17 @@ function game(over: Partial<Game> = {}): Game {
 }
 
 describe("espnTeamUrl", () => {
-  it("uses the league path for US leagues", () => {
-    expect(espnTeamUrl(lakers, nba)).toBe("https://www.espn.com/nba/team/_/id/13");
+  it("uses the name-based path (abbr + slug) for US leagues", () => {
+    // ESPN's id-based team URLs dead-end when navigating around espn.com; the
+    // name form is the canonical, durable one.
+    expect(espnTeamUrl(lakers, nba)).toBe(
+      "https://www.espn.com/nba/team/_/name/lal/los-angeles-lakers",
+    );
   });
-  it("uses /soccer/ for soccer leagues instead of the league slug", () => {
-    expect(espnTeamUrl(lakers, mls)).toBe("https://www.espn.com/soccer/team/_/id/13");
+  it("keeps the id-based /soccer/ path (name form doesn't resolve for soccer)", () => {
+    expect(espnTeamUrl(lakers, mls)).toBe(
+      "https://www.espn.com/soccer/team/_/id/13/los-angeles-lakers",
+    );
   });
 });
 

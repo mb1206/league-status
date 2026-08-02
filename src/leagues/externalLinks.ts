@@ -7,9 +7,20 @@ function opponentAbbr(game: Game): string {
   return game.isHome ? game.awayTeam.abbreviation : game.homeTeam.abbreviation;
 }
 
+function slug(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
 export function espnTeamUrl(team: Team, league: LeagueConfig): string {
-  const path = league.sport === "soccer" ? "soccer" : league.league;
-  return `https://www.espn.com/${path}/team/_/id/${team.id}`;
+  const nameSlug = slug(team.name);
+  // ESPN soccer only resolves id-based team URLs; the name form dead-ends to the
+  // soccer homepage.
+  if (league.sport === "soccer") {
+    return `https://www.espn.com/soccer/team/_/id/${team.id}/${nameSlug}`;
+  }
+  // US leagues use the name-based path (abbreviation + slug). The id-based form
+  // leads to dead links when navigating around espn.com.
+  return `https://www.espn.com/${league.league}/team/_/name/${team.abbreviation.toLowerCase()}/${nameSlug}`;
 }
 
 export function seasonYear(pastGames: Game[], now: Date): number {
