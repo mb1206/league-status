@@ -19,6 +19,8 @@ function opponent(g: Game): string {
 }
 
 function scoreText(g: Game): string {
+  // Only a played (final) game has a real score; scheduled games report 0-0.
+  if (g.status !== "final") return "";
   if (g.homeTeam.score == null || g.awayTeam.score == null) return "";
   const mine = g.isHome ? g.homeTeam.score : g.awayTeam.score;
   const theirs = g.isHome ? g.awayTeam.score : g.homeTeam.score;

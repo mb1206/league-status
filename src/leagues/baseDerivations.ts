@@ -58,11 +58,15 @@ export function standingSummary(raw: RawStanding): Standing {
 
 export function splitGames(games: Game[], now: Date) {
   const t = now.getTime();
+  // Past = games that actually happened (played or live). A game whose date has
+  // passed but is still "scheduled" is a stale/rescheduled ghost — it has no real
+  // result, so it belongs in neither list (its real entry shows at the new date).
   const past = games
-    .filter((g) => Date.parse(g.date) < t)
+    .filter((g) => g.status === "final" || g.status === "in_progress")
     .sort((a, b) => byDateAsc(b, a)); // desc
+  // Upcoming = not-yet-played games still ahead of now.
   const upcoming = games
-    .filter((g) => Date.parse(g.date) >= t)
+    .filter((g) => g.status === "scheduled" && Date.parse(g.date) >= t)
     .sort(byDateAsc); // asc
   return { past, upcoming };
 }

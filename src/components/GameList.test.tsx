@@ -32,6 +32,20 @@ describe("GameList", () => {
     expect(screen.getByText(/no games/i)).toBeInTheDocument();
   });
 
+  it("does not show a score for a not-yet-played game even when the API reports 0-0", () => {
+    const notPlayed: Game = {
+      id: "np",
+      date: "2026-04-04T23:00:00Z",
+      status: "scheduled",
+      seasonType: "regular",
+      isHome: true,
+      homeTeam: { id: "13", abbreviation: "LAL", score: 0 },
+      awayTeam: { id: "2", abbreviation: "GSW", score: 0 },
+    };
+    const { container } = render(<GameList title="Upcoming" games={[notPlayed]} />);
+    expect(container.querySelector(".game-score")?.textContent).toBe("");
+  });
+
   const upcoming: Game = {
     id: "u1",
     date: "2026-04-04T23:00:00Z",
