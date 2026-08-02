@@ -107,6 +107,8 @@ export function TeamPanel({ team, onRemove }: TeamPanelProps) {
               title="Upcoming"
               showTime
               twoColumn
+              team={query.data.team}
+              league={query.data.league}
               games={selectGames(query.data.upcomingGames, {
                 homeOnly,
                 limit: UPCOMING_GAMES,

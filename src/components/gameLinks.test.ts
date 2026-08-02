@@ -14,20 +14,21 @@ const upcoming: Game = { ...base, id: "u", date: "2026-10-21T02:30:00Z", status:
 const final: Game = { ...base, id: "f", date: "2026-04-01T02:30:00Z", status: "final", result: "W" };
 
 describe("gameLinks", () => {
-  it("returns youtube + reddit and no '+' without a league", () => {
-    const kinds = gameLinks(team, upcoming).map((c) => c.kind);
-    expect(kinds).toEqual(["youtube", "reddit"]);
+  it("returns nothing for an upcoming game without a league", () => {
+    // Preview/discussion aren't useful before a game happens, and there's no
+    // league to build the calendar event, so there's nothing to show.
+    expect(gameLinks(team, upcoming).map((c) => c.kind)).toEqual([]);
   });
 
-  it("adds an '+' ics chip for an upcoming game when a league is given", () => {
+  it("returns only an add-to-calendar chip for an upcoming game with a league", () => {
     const chips = gameLinks(team, upcoming, nba);
-    expect(chips.map((c) => c.kind)).toEqual(["youtube", "reddit", "ics"]);
-    const ics = chips.find((c) => c.kind === "ics")!;
+    expect(chips.map((c) => c.kind)).toEqual(["ics"]);
+    const ics = chips[0];
     expect(ics.onClick).toBeTypeOf("function");
     expect(ics.label).toContain("calendar");
   });
 
-  it("never adds a '+' for a final game, even with a league", () => {
+  it("returns highlights + reddit for a final game, never an ics chip", () => {
     expect(gameLinks(team, final, nba).map((c) => c.kind)).toEqual(["youtube", "reddit"]);
   });
 });

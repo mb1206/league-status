@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { GameList } from "./GameList";
-import type { Game, Team } from "../domain/types";
+import type { Game, LeagueConfig, Team } from "../domain/types";
+
+const nba: LeagueConfig = {
+  id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true,
+};
 
 const past: Game = {
   id: "1",
@@ -83,10 +87,17 @@ describe("GameList", () => {
     expect(screen.queryByRole("link")).toBeNull();
   });
 
-  it("links an upcoming (not-yet-played) game to a YouTube preview, not highlights", () => {
+  it("shows only an add-to-calendar chip for an upcoming game — no preview or discussion", () => {
+    render(<GameList title="Upcoming" games={[upcoming]} team={lakers} league={nba} />);
+    expect(screen.getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /preview on YouTube/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /on Reddit/i })).toBeNull();
+  });
+
+  it("shows no per-game links for an upcoming game when no league is passed", () => {
     render(<GameList title="Upcoming" games={[upcoming]} team={lakers} />);
-    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /add .* to calendar/i })).toBeNull();
+    expect(screen.queryByRole("link")).toBeNull();
   });
 
   it("omits the header when no title or action is given", () => {

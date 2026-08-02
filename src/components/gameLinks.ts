@@ -1,21 +1,32 @@
 import type { Game, LeagueConfig, Team } from "../domain/types";
 import type { LinkChip } from "./LinkIcons";
 import { buildCalendar, downloadIcs, icsFilename } from "../leagues/ics";
-import {
-  redditGameUrl,
-  youtubeGameHighlightsUrl,
-  youtubeGamePreviewUrl,
-} from "../leagues/externalLinks";
+import { redditGameUrl, youtubeGameHighlightsUrl } from "../leagues/externalLinks";
 
 export function gameLinks(team: Team, game: Game, league?: LeagueConfig): LinkChip[] {
   const oppAbbr = game.isHome ? game.awayTeam.abbreviation : game.homeTeam.abbreviation;
-  // A played game links to highlights; one not yet played links to a preview.
   const played = game.status === "final";
-  const chips: LinkChip[] = [
+
+  // Upcoming games get only an add-to-calendar action — a preview/discussion
+  // link isn't useful before a game has happened. Without a league we can't
+  // build the event, so there's nothing to show.
+  if (!played) {
+    if (!league) return [];
+    return [
+      {
+        kind: "ics",
+        label: `Add ${team.name} vs ${oppAbbr} to calendar`,
+        onClick: () => downloadIcs(icsFilename(team, game), buildCalendar(team, league, [game])),
+      },
+    ];
+  }
+
+  // Played games link to highlights and the post-game discussion.
+  return [
     {
       kind: "youtube",
-      href: played ? youtubeGameHighlightsUrl(team, game) : youtubeGamePreviewUrl(team, game),
-      label: `${team.name} vs ${oppAbbr} ${played ? "highlights" : "preview"} on YouTube`,
+      href: youtubeGameHighlightsUrl(team, game),
+      label: `${team.name} vs ${oppAbbr} highlights on YouTube`,
     },
     {
       kind: "reddit",
@@ -23,12 +34,4 @@ export function gameLinks(team: Team, game: Game, league?: LeagueConfig): LinkCh
       label: `${team.name} vs ${oppAbbr} on Reddit`,
     },
   ];
-  if (league && !played) {
-    chips.push({
-      kind: "ics",
-      label: `Add ${team.name} vs ${oppAbbr} to calendar`,
-      onClick: () => downloadIcs(icsFilename(team, game), buildCalendar(team, league, [game])),
-    });
-  }
-  return chips;
 }

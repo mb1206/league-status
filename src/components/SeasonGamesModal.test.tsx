@@ -48,7 +48,7 @@ describe("SeasonGamesModal", () => {
     expect(screen.getByRole("link", { name: /highlights on YouTube/i })).toBeInTheDocument();
   });
 
-  it("switches to the Upcoming tab, showing upcoming games with a preview link", async () => {
+  it("switches to the Upcoming tab, showing upcoming games with only an add-to-calendar chip", async () => {
     render(
       <SeasonGamesModal team={team} league={league} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
     );
@@ -57,7 +57,9 @@ describe("SeasonGamesModal", () => {
 
     expect(screen.getByText(/EVE/)).toBeInTheDocument();
     expect(screen.queryByText(/LIV/)).toBeNull();
-    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
+    // Preview + discussion are removed from upcoming games (not helpful pre-game).
+    expect(screen.queryByRole("link", { name: /preview on YouTube/i })).toBeNull();
     expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
   });
 
