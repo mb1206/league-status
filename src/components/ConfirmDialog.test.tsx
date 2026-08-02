@@ -25,6 +25,12 @@ describe("ConfirmDialog", () => {
     expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument();
   });
 
+  it("centers the dialog on the page via the centered backdrop modifier", () => {
+    setup();
+    const backdrop = screen.getByRole("alertdialog").parentElement!;
+    expect(backdrop).toHaveClass("dialog-backdrop", "centered");
+  });
+
   it("calls onConfirm when Remove is clicked", async () => {
     const { onConfirm, onCancel } = setup();
     await userEvent.setup().click(screen.getByRole("button", { name: "Remove" }));

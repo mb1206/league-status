@@ -1,4 +1,6 @@
 node_modules
 dist
 .superpowers/
+# Superpowers specs/plans — written locally during development, not committed
+docs/superpowers/
 .DS_Store

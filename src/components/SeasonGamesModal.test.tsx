@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { SeasonGamesModal } from "./SeasonGamesModal";
 import type { Game, Team } from "../domain/types";
 import { getLeagueModule } from "../leagues/registry";
+import { icsBulkFilename } from "../leagues/ics";
 
 const league = getLeagueModule("epl").config;
 
@@ -47,7 +48,7 @@ describe("SeasonGamesModal", () => {
     expect(screen.getByRole("link", { name: /highlights on YouTube/i })).toBeInTheDocument();
   });
 
-  it("switches to the Upcoming tab, showing upcoming games with a preview link", async () => {
+  it("switches to the Upcoming tab, showing upcoming games with only an add-to-calendar chip", async () => {
     render(
       <SeasonGamesModal team={team} league={league} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
     );
@@ -56,7 +57,9 @@ describe("SeasonGamesModal", () => {
 
     expect(screen.getByText(/EVE/)).toBeInTheDocument();
     expect(screen.queryByText(/LIV/)).toBeNull();
-    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
+    // Preview + discussion are removed from upcoming games (not helpful pre-game).
+    expect(screen.queryByRole("link", { name: /preview on YouTube/i })).toBeNull();
     expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
   });
 
@@ -91,5 +94,26 @@ describe("SeasonGamesModal", () => {
     expect(screen.getByRole("button", { name: /list view/i })).toBeInTheDocument();
     // A weekday header proves the calendar rendered.
     expect(screen.getByText("Sun")).toBeInTheDocument();
+  });
+
+  it("bulk-exports all upcoming games from the calendar view", async () => {
+    const createUrl = vi.fn(() => "blob:x");
+    vi.stubGlobal("URL", { createObjectURL: createUrl, revokeObjectURL: vi.fn() });
+    let downloadName: string | undefined;
+    const clickSpy = vi
+      .spyOn(HTMLAnchorElement.prototype, "click")
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        downloadName = this.download;
+      });
+    render(
+      <SeasonGamesModal team={team} league={league} pastGames={past} upcomingGames={upcoming} onClose={() => {}} />,
+    );
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /calendar view/i }));
+    await user.click(screen.getByRole("button", { name: /add all upcoming/i }));
+    expect(createUrl).toHaveBeenCalledTimes(1);
+    expect(downloadName).toBe(icsBulkFilename(team));
+    clickSpy.mockRestore();
+    vi.unstubAllGlobals();
   });
 });

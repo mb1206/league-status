@@ -3,13 +3,14 @@ import type { DayGroup } from "../leagues/upcomingWeek";
 interface WeekBannerProps {
   groups: DayGroup[];
   activeLeague?: string | null;
+  onOpenCalendar: () => void;
 }
 
 function timeText(iso: string): string {
   return new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 }
 
-export function WeekBanner({ groups, activeLeague = null }: WeekBannerProps) {
+export function WeekBanner({ groups, activeLeague = null, onOpenCalendar }: WeekBannerProps) {
   // Respect the sport filter, but only when the active league actually has games
   // here; a stale filter falls back to showing everything.
   const hasActive =
@@ -25,7 +26,17 @@ export function WeekBanner({ groups, activeLeague = null }: WeekBannerProps) {
 
   return (
     <section className="week-banner" aria-label="Games in the next 7 days">
-      <h2 className="week-banner-title">Next 7 Days</h2>
+      <div className="week-banner-head">
+        <h2 className="week-banner-title">Next 7 Days</h2>
+        <button
+          className="week-calendar-btn"
+          aria-label="All teams calendar"
+          title="All teams calendar"
+          onClick={onOpenCalendar}
+        >
+          📅
+        </button>
+      </div>
       {empty ? (
         <p className="week-banner-empty">No games in the next 7 days.</p>
       ) : (

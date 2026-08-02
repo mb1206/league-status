@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { GameList } from "./GameList";
-import type { Game, Team } from "../domain/types";
+import type { Game, LeagueConfig, Team } from "../domain/types";
+
+const nba: LeagueConfig = {
+  id: "nba", sport: "basketball", league: "nba", displayName: "NBA", icon: "🏀", hasPlayoffs: true,
+};
 
 const past: Game = {
   id: "1",
@@ -26,6 +30,20 @@ describe("GameList", () => {
   it("shows an empty message when there are no games", () => {
     render(<GameList title="Upcoming" games={[]} />);
     expect(screen.getByText(/no games/i)).toBeInTheDocument();
+  });
+
+  it("does not show a score for a not-yet-played game even when the API reports 0-0", () => {
+    const notPlayed: Game = {
+      id: "np",
+      date: "2026-04-04T23:00:00Z",
+      status: "scheduled",
+      seasonType: "regular",
+      isHome: true,
+      homeTeam: { id: "13", abbreviation: "LAL", score: 0 },
+      awayTeam: { id: "2", abbreviation: "GSW", score: 0 },
+    };
+    const { container } = render(<GameList title="Upcoming" games={[notPlayed]} />);
+    expect(container.querySelector(".game-score")?.textContent).toBe("");
   });
 
   const upcoming: Game = {
@@ -83,10 +101,17 @@ describe("GameList", () => {
     expect(screen.queryByRole("link")).toBeNull();
   });
 
-  it("links an upcoming (not-yet-played) game to a YouTube preview, not highlights", () => {
+  it("shows only an add-to-calendar chip for an upcoming game — no preview or discussion", () => {
+    render(<GameList title="Upcoming" games={[upcoming]} team={lakers} league={nba} />);
+    expect(screen.getByRole("button", { name: /add .* to calendar/i })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /preview on YouTube/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: /on Reddit/i })).toBeNull();
+  });
+
+  it("shows no per-game links for an upcoming game when no league is passed", () => {
     render(<GameList title="Upcoming" games={[upcoming]} team={lakers} />);
-    expect(screen.getByRole("link", { name: /preview on YouTube/i })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /highlights on YouTube/i })).toBeNull();
+    expect(screen.queryByRole("button", { name: /add .* to calendar/i })).toBeNull();
+    expect(screen.queryByRole("link")).toBeNull();
   });
 
   it("omits the header when no title or action is given", () => {

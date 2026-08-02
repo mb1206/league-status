@@ -117,13 +117,13 @@ describe("TeamPanel", () => {
     render(<TeamPanel team={team} onRemove={() => {}} />);
     expect(
       screen.getByRole("link", { name: /Los Angeles Lakers on ESPN/i }),
-    ).toHaveAttribute("href", "https://www.espn.com/nba/team/_/id/13");
+    ).toHaveAttribute("href", "https://www.espn.com/nba/team/_/name/lal/los-angeles-lakers");
     expect(
       screen.getByRole("link", { name: /season highlights on YouTube/i }),
     ).toBeInTheDocument();
   });
 
-  it("renders per-game links in Past but not Upcoming", () => {
+  it("renders per-game links in Past and an add-to-calendar chip in Upcoming", () => {
     const g = (id: string): TeamStatus["pastGames"][number] => ({
       id,
       date: "2026-04-01T02:30:00Z",
@@ -143,7 +143,7 @@ describe("TeamPanel", () => {
     const { container } = render(<TeamPanel team={team} onRemove={() => {}} />);
     const lists = container.querySelectorAll(".panel-games .game-list");
     expect(lists[0].querySelectorAll(".game-links")).toHaveLength(1); // Past
-    expect(lists[1].querySelectorAll(".game-links")).toHaveLength(0); // Upcoming
+    expect(lists[1].querySelectorAll(".game-links")).toHaveLength(1); // Upcoming (add-to-calendar)
   });
 
   it("shows an error card with a working Retry button", async () => {

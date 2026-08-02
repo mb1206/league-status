@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { WeekBanner } from "./WeekBanner";
 import type { DayGroup } from "../leagues/upcomingWeek";
 
@@ -16,7 +17,7 @@ const groups: DayGroup[] = [
 
 describe("WeekBanner", () => {
   it("renders a card per game linking to that team's anchor", () => {
-    render(<WeekBanner groups={groups} />);
+    render(<WeekBanner groups={groups} onOpenCalendar={() => {}} />);
     const lal = screen.getByRole("link", { name: "LAL vs GSW" });
     expect(lal).toHaveAttribute("href", "#team-nba-13");
     const sf = screen.getByRole("link", { name: "SF @ LAR" });
@@ -24,19 +25,19 @@ describe("WeekBanner", () => {
   });
 
   it("narrows to the active league when it has games", () => {
-    render(<WeekBanner groups={groups} activeLeague="nfl" />);
+    render(<WeekBanner groups={groups} activeLeague="nfl" onOpenCalendar={() => {}} />);
     expect(screen.getByRole("link", { name: "SF @ LAR" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "LAL vs GSW" })).toBeNull();
   });
 
   it("shows all games when the active league has none here (stale filter)", () => {
-    render(<WeekBanner groups={groups} activeLeague="mlb" />);
+    render(<WeekBanner groups={groups} activeLeague="mlb" onOpenCalendar={() => {}} />);
     expect(screen.getByRole("link", { name: "LAL vs GSW" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "SF @ LAR" })).toBeInTheDocument();
   });
 
   it("shows an empty message when there are no games", () => {
-    render(<WeekBanner groups={[]} />);
+    render(<WeekBanner groups={[]} onOpenCalendar={() => {}} />);
     expect(screen.getByText(/no games in the next 7 days/i)).toBeInTheDocument();
   });
 
@@ -51,10 +52,17 @@ describe("WeekBanner", () => {
         ],
       },
     ];
-    render(<WeekBanner groups={withLogo} />);
+    render(<WeekBanner groups={withLogo} onOpenCalendar={() => {}} />);
     const logo = screen.getByRole("link", { name: "LAL vs GSW" }).querySelector("img");
     expect(logo).toHaveAttribute("src", "https://logos.example/lal.png");
     // SF has no logoUrl → emoji fallback, no img.
     expect(screen.getByRole("link", { name: "SF @ LAR" }).querySelector("img")).toBeNull();
+  });
+
+  it("invokes onOpenCalendar when the calendar button is clicked", async () => {
+    const onOpenCalendar = vi.fn();
+    render(<WeekBanner groups={groups} onOpenCalendar={onOpenCalendar} />);
+    await userEvent.click(screen.getByRole("button", { name: /all teams calendar/i }));
+    expect(onOpenCalendar).toHaveBeenCalledTimes(1);
   });
 });

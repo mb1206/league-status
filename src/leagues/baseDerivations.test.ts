@@ -61,6 +61,18 @@ describe("splitGames", () => {
     expect(past.map((g) => g.id)).toEqual(["p2", "p1", "p3", "p4"]);
     expect(upcoming.map((g) => g.id)).toEqual(["u2", "u1", "u3", "u4"]);
   });
+
+  it("excludes a past-dated game that is still scheduled (rescheduled/postponed ghost)", () => {
+    const games = [
+      game({ id: "played", date: daysFromNow(-2), status: "final" }),
+      // Date passed but never played (rescheduled) — not a real result, not upcoming.
+      game({ id: "ghost", date: daysFromNow(-3), status: "scheduled" }),
+      game({ id: "next", date: daysFromNow(3), status: "scheduled" }),
+    ];
+    const { past, upcoming } = splitGames(games, NOW);
+    expect(past.map((g) => g.id)).toEqual(["played"]);
+    expect(upcoming.map((g) => g.id)).toEqual(["next"]);
+  });
 });
 
 describe("selectGames", () => {
